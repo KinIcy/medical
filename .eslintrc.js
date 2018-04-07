@@ -14,7 +14,9 @@ module.exports = {
   rules: {
     "linebreak-style":"off",
     "import/no-unresolved":"off",
-    "import/extensions":"off"
+    "import/extensions":"off",
+    "import/no-extraneous-dependencies": "off",
+    "import/first": "off"
   },
   globals: {}
 }
