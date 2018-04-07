@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-import { db } from './index';
+import { db } from './';
 
 const Paciente = db.define('paciente', {
   tipoId: { type: Sequelize.ENUM('CC', 'TI', 'PP', 'CE', 'RC'), allowNull: false, unique: 'identificacion' },

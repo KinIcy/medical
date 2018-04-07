@@ -1,6 +1,8 @@
 import Sequelize from 'sequelize';
 
-import { db, Medico, Paciente } from './index';
+import { db } from './';
+import Medico from './medico';
+import Paciente from './paciente';
 
 const Cita = db.define('cita', {
   fecha: { type: Sequelize.DATEONLY, allowNull: false },

@@ -4,9 +4,11 @@ const dbName = process.env.PG_DB_NAME || 'medical';
 const dbUser = process.env.PG_DB_USER || 'medical';
 const dbPassword = process.env.PG_DB_PASSWORD || 'thescret';
 const dbHost = process.env.PG_DB_HOST || 'localhost';
+const dbPort = process.env.PG_DB_PORT || '5432';
 
 const db = new Sequelize(dbName, dbUser, dbPassword, {
   host: dbHost,
+  port: dbPort,
   dialect: 'postgres',
   operatorsAliases: false,
   pool: {
@@ -15,12 +17,10 @@ const db = new Sequelize(dbName, dbUser, dbPassword, {
     acquire: 30000,
     idle: 10000,
   },
+  dialectOptions: {
+    ssl: true,
+  },
 });
-
-const Paciente = require('./paciente');
-const Horario = require('./horario');
-const Medico = require('./medico');
-const Cita = require('./cita');
 
 async function initializeDB() {
   await db.authenticate();
@@ -28,5 +28,5 @@ async function initializeDB() {
 }
 
 export default {
-  db, initializeDB, Paciente, Horario, Medico, Cita,
+  db, initializeDB,
 };
