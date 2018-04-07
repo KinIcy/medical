@@ -15,19 +15,19 @@
 </template>
 
 <script>
-import axios from '~/plugins/axios'
+import axios from '~/plugins/axios';
 
 export default {
-  async asyncData () {
-    let { data } = await axios.get('/api/users')
-    return { users: data }
+  async asyncData() {
+    const { data } = await axios.get('/api/users');
+    return { users: data };
   },
-  head () {
+  head() {
     return {
-      title: 'Users'
-    }
-  }
-}
+      title: 'Users',
+    };
+  },
+};
 </script>
 
 <style scoped>

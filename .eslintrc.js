@@ -12,7 +12,9 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
-    "linebreak-style":"off"
+    "linebreak-style":"off",
+    "import/no-unresolved":"off",
+    "import/extensions":"off"
   },
   globals: {}
 }
