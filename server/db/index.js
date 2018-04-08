@@ -22,11 +22,26 @@ const db = new Sequelize(dbName, dbUser, dbPassword, {
   },
 });
 
-async function initializeDB() {
+const Medico = require('./models/medico').default(db);
+const Horario = require('./models/horario').default(db);
+const Paciente = require('./models/paciente').default(db);
+const Cita = require('./models/cita').default(db);
+
+const models = {
+  Medico, Horario, Paciente, Cita,
+};
+
+Object.keys(models).forEach((modelName) => {
+  if (models[modelName].associate) {
+    models[modelName].associate(models);
+  }
+});
+
+async function initialize() {
   await db.authenticate();
   await db.sync();
 }
 
 export default {
-  db, initializeDB,
+  db, initialize, models,
 };

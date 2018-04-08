@@ -32,7 +32,7 @@ if (config.dev) {
 app.use(nuxt.render);
 
 // Listen the server
-db.initializeDB().then(() => app.listen(port, host)).then(() => {
+db.initialize().then(() => app.listen(port, host)).then(() => {
   console.log(`Server listening on ${host}:${port}`); // eslint-disable-line no-console
 }).catch((error) => {
   throw error;
