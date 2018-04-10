@@ -8,6 +8,7 @@ export default function (db) {
     especialidad: { type: Sequelize.STRING(50), allowNull: false },
     contrasena: { type: Sequelize.STRING(100), allowNull: false },
     estado: { type: Sequelize.ENUM('activo', 'inactivo'), allowNull: false, defaultValue: 'activo' },
+    esAdmin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
   });
 
   return Medico;

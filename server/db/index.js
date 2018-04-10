@@ -27,7 +27,7 @@ const Horario = require('./models/horario').default(db);
 const Paciente = require('./models/paciente').default(db);
 const Cita = require('./models/cita').default(db);
 
-const models = {
+export const models = {
   Medico, Horario, Paciente, Cita,
 };
 
@@ -37,7 +37,7 @@ Object.keys(models).forEach((modelName) => {
   }
 });
 
-async function initialize() {
+export async function initialize() {
   await db.authenticate();
   await db.sync();
 }

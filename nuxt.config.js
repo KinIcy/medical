@@ -40,9 +40,6 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
   ],
-  router: {
-    middleware: ['auth'],
-  },
   auth: {
     rewriteRedirects: false,
     strategies: {
