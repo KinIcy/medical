@@ -40,6 +40,33 @@ Object.keys(models).forEach((modelName) => {
 export async function initialize() {
   await db.authenticate();
   await db.sync();
+  await Paciente.findOrCreate({
+    where: { numId: '00000000', tipoId: 'PP' },
+    defaults: {
+      tipoId: 'PP',
+      numId: '00000000',
+      nombres: 'Paciente',
+      apellidos: 'Pruebas',
+      contrasena: 'averyverysecretsecret',
+      fechaNacimiento: new Date(2000, 1, 1),
+      estado: 'activo',
+      telefono: '00000000',
+      correo: 'test@myemail.com',
+      ciudad: 'Cali',
+    },
+  });
+  await Medico.findOrCreate({
+    where: { usuario: 'test' },
+    defaults: {
+      nombres: 'Medico',
+      apellidos: 'Prueba',
+      usuario: 'test',
+      especialidad: 'Maniquí de Pruebas',
+      contrasena: 'averyverysecretsecret',
+      estado: 'activo',
+      esAdmin: true,
+    },
+  });
 }
 
 export default {
