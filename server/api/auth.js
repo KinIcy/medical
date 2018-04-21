@@ -6,7 +6,6 @@ const secret = 'dummy' || process.env.SECRET;
 const router = Router();
 
 router.post('/login', async (req, res) => {
-  res.status(400).send({ error: 'En contruccion'});
   const { tipo, usuario, contrasena } = req.body;
   let accessToken;
   if (!usuario || usuario.length < 3) {
