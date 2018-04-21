@@ -6,6 +6,7 @@ const secret = 'dummy' || process.env.SECRET;
 const router = Router();
 
 router.post('/login', async (req, res) => {
+/*
   const { tipo, usuario, contrasena } = req.body;
   let accessToken;
   if (!usuario || usuario.length < 3) {
@@ -43,6 +44,7 @@ router.post('/login', async (req, res) => {
   } else {
     res.status(500).send({ error: 'Algo inesperado ocurrió ' });
   }
+  */
 });
 
 router.get('/user', (req, res) => {
