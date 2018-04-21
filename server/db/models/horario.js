@@ -3,7 +3,7 @@ import Sequelize from 'sequelize';
 export default function (db) {
   const Horario = db.define('horario', {
     idHorario: {
-      type: Sequelize.TINYINT,
+      type: Sequelize.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
