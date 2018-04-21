@@ -5,13 +5,13 @@ import { models } from '../db';
 const secret = 'dummy' || process.env.SECRET;
 const router = Router();
 
-router.post('login', async (req, res) => {
+router.post('/login', async (req, res) => {
   const { tipo, usuario, contrasena } = req.body;
   let accessToken;
   if (!usuario || usuario.length < 3) {
-    res.status(400).json({ error: 'Nombre de usuario invalido' });
+    res.status(400).send({ error: 'Nombre de usuario invalido' });
   } else if (!contrasena || contrasena.length < 8) {
-    res.status(400).json({ error: 'Contraseña invalida' });
+    res.status(400).send({ error: 'Contraseña invalida' });
   } else if (tipo === 'paciente') {
     const paciente = await models.Paciente.findOne({
       where: {
@@ -23,7 +23,7 @@ router.post('login', async (req, res) => {
       attributes: ['tipoId', 'numId', 'nombres', 'apellidos'],
     });
     if (!paciente) {
-      res.status(404).json({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
+      res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
     } else {
       accessToken = jsonwebtoken.sign(Object.assign(paciente, { scope: ['paciente'] }, secret));
     }
@@ -33,23 +33,23 @@ router.post('login', async (req, res) => {
       attributes: ['nombres', 'apellidos', 'esAdmin'],
     });
     if (!medico) {
-      res.status(404).json({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
+      res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
     } else {
       accessToken = jsonwebtoken.sign(Object.assign(medico, { scope: [medico.esAdmin ? 'admin' : 'medico'] }, secret));
     }
-  } else res.status(400).json({ error: 'Tipo de acceso invalido' });
+  } else res.status(400).send({ error: 'Tipo de acceso invalido' });
   if (accessToken) {
     res.json({ token: accessToken });
   } else {
-    res.status(500).json({ error: 'Algo inesperado ocurrió ' });
+    res.status(500).send({ error: 'Algo inesperado ocurrió ' });
   }
 });
 
-router.get('user', (req, res) => {
+router.get('/user', (req, res) => {
   res.json(req.user);
 });
 
-router.post('logout', (req, res) => {
+router.post('/logout', (req, res) => {
   res.json({ status: 'OK' });
 });
 
