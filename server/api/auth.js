@@ -7,9 +7,8 @@ const router = Router();
 
 router.post('/login', async (req, res) => {
   const { tipo, usuario, contrasena } = req.body;
-  res.status(400).send({ error: 'Nombre de usuario invalido' + usuario});
+  res.status(400).send({ error: 'Nombre de usuario invalido'});
   let accessToken;
-/*
   if (!usuario || usuario.length < 3) {
     res.status(400).send({ error: 'Nombre de usuario invalido' });
   } else if (!contrasena || contrasena.length < 8) {
@@ -45,7 +44,6 @@ router.post('/login', async (req, res) => {
   } else {
     res.status(500).send({ error: 'Algo inesperado ocurrió ' });
   }
-  */
 });
 
 router.get('/user', (req, res) => {
