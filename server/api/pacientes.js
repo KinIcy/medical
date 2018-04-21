@@ -29,4 +29,29 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  if (req.user.scope.indexOf('paciente') >= 0) {
+    res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
+  } else {
+    const pacientes = await models.Paciente.findAll({
+      attributes: ['tipoId', 'numId', 'nombres', 'estado'],
+    });
+    res.send({ pacientes });
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  if (req.user.scope.indexOf('paciente') >= 0) {
+    res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
+  } else {
+    const paciente = await models.Paciente.findOne({
+      where: { tipoId: req.params.id.substring(0, 2), numId: req.params.id.substring(2) },
+      attributes: { exclude: ['constrasena'] },
+    });
+    if (paciente) {
+      res.send(paciente);
+    } else res.status(404).send({ error: 'Paciente no encontrado' });
+  }
+});
+
 export default router;
