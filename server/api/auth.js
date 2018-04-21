@@ -2,7 +2,6 @@ import { Router } from 'express';
 import jsonwebtoken from 'jsonwebtoken';
 import { models } from '../db';
 
-var jwt = require('jsonwebtoken');
 const secret = 'dummy' || process.env.SECRET;
 const router = Router();
 
@@ -26,8 +25,7 @@ router.post('/login', async (req, res) => {
     if (!paciente) {
       res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
     } else {
-      //accessToken = jsonwebtoken.sign(Object.assign(paciente, { scope: ['paciente'] }, secret));
-      accessToken = jwt.sign({ foo: 'bar' }, 'shhhhh');
+      accessToken = jsonwebtoken.sign(Object.assign(paciente, { scope: ['paciente'] }, secret));
     }
   } else if (tipo === 'medico') {
     const medico = await models.Paciente.findOne({
