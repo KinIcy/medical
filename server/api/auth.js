@@ -26,7 +26,9 @@ router.post('/login', async (req, res) => {
       res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
     } else {
       //accessToken = jsonwebtoken.sign(Object.assign(paciente, { scope: ['paciente'] }, secret));
+
       jsonwebtoken.sign({paciente}, secret, (err, token) => {
+        accessToken = token;
         res.json({
           token
         });
