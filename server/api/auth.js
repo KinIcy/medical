@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
     if (!paciente) {
       res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
     } else {
-      accessToken = jsonwebtoken.sign(Object.assign(paciente, { scope: ['paciente'] }, secret));
+      //accessToken = jsonwebtoken.sign(Object.assign(paciente, { scope: ['paciente'] }, secret));
     }
   } else if (tipo === 'medico') {
     const medico = await models.Paciente.findOne({
