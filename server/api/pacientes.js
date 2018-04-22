@@ -9,11 +9,11 @@ router.post('/', async (req, res) => {
     !res.body.fechaNacimiento.length || !res.body.telefono.length || !res.body.correo.length ||
     !res.body.ciudad.length || !res.body.tipoId.length
   ) {
-    res.status(400).json({ error: 'Por favor verifique que todos los campos han sido dilegenciados correctamente' });
+    res.status(400).send({ error: 'Por favor verifique que todos los campos han sido dilegenciados correctamente' });
   } else if (await models.Paciente.findOne({
     where: { numId: req.body.numId, tipoId: req.body.tipoId },
   })) {
-    res.status(400).json({ error: 'Ya existe un paciente registrado con mismo documento de identiidad' });
+    res.status(400).send({ error: 'Ya existe un paciente registrado con mismo documento de identiidad' });
   } else {
     await models.Paciente.create({
       tipoId: req.body.tipoId,
@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
       correo: req.body.correo,
       constrasena: crypto.randomBytes(20).toString('hex'),
     });
-    res.status(201).json({ status: 'OK' });
+    res.status(201).send({ status: 'OK' });
   }
 });
 
@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
     const pacientes = await models.Paciente.findAll({
       attributes: ['tipoId', 'numId', 'nombres', 'estado'],
     });
-    res.send({ pacientes });
+    res.send({ pacientes: pacientes.filter(paciente => paciente.dataValues) });
   }
 });
 
@@ -49,9 +49,40 @@ router.get('/:id', async (req, res) => {
       attributes: { exclude: ['constrasena'] },
     });
     if (paciente) {
-      res.send(paciente);
+      res.send(paciente.dataValues);
     } else res.status(404).send({ error: 'Paciente no encontrado' });
   }
 });
+
+router.get('/historial', async (req, res) => {
+  if (req.user.scope.indexOf('paciente') < 0) {
+    res.status(401).send({ error: 'Es necesario iniciar sesión como paciente' });
+  } else {
+    const citas = await models.Cita.findAll({
+      where: { idPaciente: req.user.idPaciente, estado: 'atendida' },
+    });
+    res.send({ citas: citas.filter(cita => cita.dataValues) });
+  }
+});
+
+router.get('/:id/historial', async (req, res) => {
+  if (req.user.scope.indexOf('paciente') >= 0) {
+    res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
+  } else {
+    const { idPaciente } = await models.Paciente.findOne({
+      where: { tipoId: req.params.id.substring(0, 2), numId: req.params.id.substring(2) },
+      attributes: ['idPaciente'],
+    });
+    if (idPaciente === undefined) {
+      res.status(404).send({ error: 'Paciente no encontrado' });
+    } else {
+      const citas = await models.Cita.findAll({
+        where: { idPaciente, estado: 'atendida' },
+      });
+      res.send({ citas: citas.filter(cita => cita.dataValues) });
+    }
+  }
+});
+
 
 export default router;
