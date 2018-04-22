@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
         contrasena,
         estado: 'activo',
       },
-      attributes: ['tipoId', 'numId', 'nombres', 'apellidos'],
+      attributes: ['idPaciente', 'tipoId', 'numId', 'nombres', 'apellidos'],
     });
     if (!paciente) {
       res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
       accessToken = jsonwebtoken.sign(Object.assign(medico.dataValues, { scope: [medico.esAdmin ? 'admin' : 'medico'] }), secret);
     }
   } else {
-    res.status(400).send({ error: 'Tipo de acceso invalido' })
+    res.status(400).send({ error: 'Tipo de acceso invalido' });
   }
   if (accessToken) {
     res.json({ token: accessToken });
