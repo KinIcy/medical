@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
     if (!paciente) {
       res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
     } else {
-      accessToken = jsonwebtoken.sign(Object.assign(paciente, { scope: ['paciente'] }, secret));
+      accessToken = jsonwebtoken.sign(Object.assign(paciente.dataValues, { scope: ['paciente'] }), secret);
     }
   } else if (tipo === 'medico') {
     const medico = await models.Paciente.findOne({
@@ -35,9 +35,11 @@ router.post('/login', async (req, res) => {
     if (!medico) {
       res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
     } else {
-      accessToken = jsonwebtoken.sign(Object.assign(medico, { scope: [medico.esAdmin ? 'admin' : 'medico'] }, secret));
+      accessToken = jsonwebtoken.sign(Object.assign(medico.dataValues, { scope: [medico.esAdmin ? 'admin' : 'medico'] }), secret);
     }
-  } else res.status(400).send({ error: 'Tipo de acceso invalido' });
+  } else {
+    res.status(400).send({ error: 'Tipo de acceso invalido' })
+  }
   if (accessToken) {
     res.json({ token: accessToken });
   } else {

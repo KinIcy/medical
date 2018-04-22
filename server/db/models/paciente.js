@@ -2,6 +2,12 @@ import Sequelize from 'sequelize';
 
 export default function (db) {
   const Paciente = db.define('paciente', {
+    idPaciente: {
+      type: Sequelize.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     tipoId: { type: Sequelize.ENUM('CC', 'TI', 'PP', 'CE', 'RC'), allowNull: false, unique: 'identificacion' },
     numId: { type: Sequelize.CHAR(10), allowNull: false, unique: 'identificacion' },
     nombres: { type: Sequelize.STRING(50), allowNull: false },
