@@ -11,14 +11,11 @@ export default function (db) {
     dia: { type: Sequelize.ENUM('L', 'M', 'X', 'J', 'V', 'S', 'D'), allowNull: false },
     horaInicio: { type: Sequelize.TIME, allowNull: false },
     horaFin: { type: Sequelize.TIME, allowNull: false },
-  }, {
-    classMethods: {
-      associate({ Medico }) {
-        Horario.belongsTo(Medico);
-      },
-    },
   });
 
+  Horario.associate = ({ Medico }) => {
+    Horario.belongsTo(Medico, { foreignKey: 'idMedico' });
+  };
 
   return Horario;
 }

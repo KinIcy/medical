@@ -15,14 +15,12 @@ export default function (db) {
     formulacion: { type: Sequelize.TEXT },
     observaciones: { type: Sequelize.TEXT },
     estado: { type: Sequelize.ENUM('reservada', 'cancelada', 'atendida', 'disponible'), allowNull: false, defaultValue: 'reservada' },
-  }, {
-    classMethods: {
-      associate({ Medico, Paciente }) {
-        Cita.hasOne(Medico);
-        Cita.hasOne(Paciente);
-      },
-    },
   });
+
+  Cita.associate = ({ Medico, Paciente }) => {
+    Cita.belongsTo(Medico, { foreignKey: 'idMedico' });
+    Cita.belongsTo(Paciente, { foreignKey: 'idPaciente' });
+  };
 
   return Cita;
 }
