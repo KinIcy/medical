@@ -72,4 +72,45 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/agenda', async (req, res) => {
+  if (res.user.scope.indexOf('medico') < 0) {
+    res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
+  } else {
+    const agenda = await models.Horario.findAll({
+      where: { idMedico: req.user.idMedico },
+    });
+    res.send({ agenda: agenda.filter(horario => horario.dataValues) });
+  }
+});
+
+router.post('/agenda', async (req, res) => {
+  const { dia, horaInicio, horaFin } = req.body;
+  const horaRegex = /^\d{2}:\d{2}$/;
+  if (res.user.scope.indexOf('medico') < 0) {
+    res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
+  } else if (!dia.length || !horaInicio.length || !horaFin.length) {
+    res.status(400).send({ error: 'Por favor verifique que todos los campos han sido dilegenciados correctamente' });
+  } else if (!(dia in ['L', 'M', 'X', 'J', 'V', 'S', 'D'])) {
+    res.status(400).send({ error: 'Día invalido' });
+  } else if (!horaRegex.test(horaInicio) || !horaRegex.test(horaFin)) {
+    res.status(400).send({ error: 'Verifique que los horarios estén en formato HH:MM' });
+  } else {
+    await models.Horario.create({
+      dia, horaInicio, horaFin, idMedico: req.user.idMedico,
+    });
+    res.send({ status: 'OK' });
+  }
+});
+
+router.delete('/agenda/:id', async (req, res) => {
+  if (res.user.scope.indexOf('medico') < 0) {
+    res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
+  } else {
+    await models.Horario.destroy({
+      where: { idHorario: req.params.id, idMedico: req.user.idMedico },
+    });
+    res.send({ status: 'OK' });
+  }
+});
+
 export default router;
