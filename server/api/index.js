@@ -7,6 +7,7 @@ import jwt from 'express-jwt';
 import auth from './auth';
 import pacientes from './pacientes';
 import medicos from './medicos';
+import citas from './citas';
 
 const router = Router();
 
@@ -26,6 +27,7 @@ router.use(jwt({
 router.use('/auth', auth);
 router.use('/pacientes', pacientes);
 router.use('/medicos', medicos);
+router.use('/citas', citas);
 
 router.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
