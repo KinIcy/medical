@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import Sequelize from 'sequelize';
 
 import { models } from '../db';
 import aeh from '../async-error-handler';
@@ -45,6 +46,47 @@ router.post('/', aeh(async (req, res) => {
       }
     }
   }
+}));
+
+router.get('/', aeh(async (req, res) => {
+  let citas;
+  if (req.user.scope.indexOf('paciente') >= 0) {
+    citas = await models.Cita.findAll({
+      where: {
+        idPaciente: req.user.idPaciente,
+        estado: { [Sequelize.Op.ne]: 'disponible' },
+      },
+      include: {
+        model: models.Medico,
+        attributes: ['nombres', 'apellidos'],
+      },
+    });
+  } else if (req.user.scope.indexOf('medico') >= 0) {
+    citas = await models.Cita.findAll({
+      where: {
+        idMedico: req.user.idMedico,
+        estado: { [Sequelize.Op.ne]: 'disponible' },
+      },
+      include: {
+        model: models.Paciente,
+        attributes: ['nombres', 'apellidos'],
+      },
+    });
+  } else {
+    citas = await models.Cita.findAll({
+      where: {
+        estado: { [Sequelize.Op.ne]: 'disponible' },
+      },
+      include: [{
+        model: models.Paciente,
+        attributes: ['nombres', 'apellidos'],
+      }, {
+        model: models.Medico,
+        attributes: ['nombres', 'apellidos'],
+      }],
+    });
+  }
+  res.send({ citas: citas.filter(cita => cita.dataValues) });
 }));
 
 export default router;
