@@ -73,18 +73,18 @@ router.get('/:id', aeh(async (req, res) => {
   }
 }));
 
-router.get('/agenda', aeh(async (req, res) => {
+router.get('/horarios', aeh(async (req, res) => {
   if (res.user.scope.indexOf('medico') < 0) {
     res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   } else {
-    const agenda = await models.Horario.findAll({
+    const horarios = await models.Horario.findAll({
       where: { idMedico: req.user.idMedico },
     });
-    res.send({ agenda: agenda.filter(horario => horario.dataValues) });
+    res.send({ horarios: horarios.filter(horario => horario.dataValues) });
   }
 }));
 
-router.post('/agenda', aeh(async (req, res) => {
+router.post('/horarios', aeh(async (req, res) => {
   const { dia, horaInicio, horaFin } = req.body;
   const horaRegex = /^\d{2}:\d{2}$/;
   if (res.user.scope.indexOf('medico') < 0) {
@@ -103,7 +103,7 @@ router.post('/agenda', aeh(async (req, res) => {
   }
 }));
 
-router.delete('/agenda/:id', aeh(async (req, res) => {
+router.delete('/horarios/:id', aeh(async (req, res) => {
   if (res.user.scope.indexOf('medico') < 0) {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
   } else {
@@ -112,6 +112,14 @@ router.delete('/agenda/:id', aeh(async (req, res) => {
     });
     res.send({ status: 'OK' });
   }
+}));
+
+router.get('/:id/agenda', aeh(async (req, res) => {
+  const disponibilidad = await models.Cita.findAll({
+    where: { idMedico: req.params.id, estado: 'disponible' },
+    attributes: ['fecha', 'hora'],
+  });
+  res.send({ disponibilidad: disponibilidad.filter(horario => horario.dataValues) });
 }));
 
 export default router;
