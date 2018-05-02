@@ -30,9 +30,14 @@ router.use('/medicos', medicos);
 router.use('/citas', citas);
 
 router.use((err, req, res, next) => {
+  if (err.name) console.log(err);
   if (err.name === 'UnauthorizedError') {
     res.status(401).send({ error: 'Invalid Token' });
   } else next();
+});
+
+router.use((req, res) => {
+  res.status(404).send({ error: 'Not found' });
 });
 
 export default router;
