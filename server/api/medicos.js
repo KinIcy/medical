@@ -49,7 +49,7 @@ router.get('/', aeh(async (req, res) => {
 }));
 
 router.get('/:id', aeh(async (req, res) => {
-  const attributes = { exclude: ['contraseña'] };
+  const attributes = { exclude: ['contrasena', 'usuario'] };
 
   if (req.user.scope.indexOf('paciente') < 0) {
     const medico = await models.Medico.findOne({
@@ -60,15 +60,16 @@ router.get('/:id', aeh(async (req, res) => {
       res.send(medico.dataValues);
     } else res.status(404).send({ error: 'Medico no encontrado' });
   } else {
-    const medico = await models.Medico.findOne({
+    const medico = await models.Cita.findOne({
       include: {
-        model: models.Cita,
-        where: { idPaciente: req.user.idPaciente },
+        where: { idMedico: req.params.id },
+        model: models.Medico,
+        attributes,
       },
-      attributes,
+      where: { idPaciente: req.user.idPaciente },
     });
     if (medico) {
-      res.send(medico.dataValues);
+      res.send(medico.dataValues.medico);
     } else res.status(404).send({ error: 'Medico no encontrado o permisos insuficientes' });
   }
 }));
