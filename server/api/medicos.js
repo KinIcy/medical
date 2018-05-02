@@ -37,15 +37,15 @@ router.get('/', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') < 0) {
     medicos = await models.Medico.findAll({ attributes });
   } else {
-    medicos = await models.Cita.findAll({
+    medicos = (await models.Cita.findAll({
       include: {
         model: models.Medico,
         attributes,
       },
       where: { idPaciente: req.user.idPaciente },
-    });
+    })).map(medico => medico.dataValues.medico);
   }
-  res.send({ medicos: medicos.filter(medico => medico.dataValues) });
+  res.send({ medicos });
 }));
 
 router.get('/:id', aeh(async (req, res) => {
