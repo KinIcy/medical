@@ -119,7 +119,7 @@ router.get('/:id/agenda', aeh(async (req, res) => {
     where: { idMedico: req.params.id, estado: 'disponible' },
     attributes: ['fecha', 'hora'],
   });
-  res.send({ disponibilidad: disponibilidad.filter(horario => horario.dataValues) });
+  res.send({ disponibilidad: disponibilidad.map(horario => horario.dataValues) });
 }));
 
 export default router;
