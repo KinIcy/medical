@@ -91,7 +91,7 @@ router.post('/horarios', aeh(async (req, res) => {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
   } else if (!dia.length || !horaInicio.length || !horaFin.length) {
     res.status(400).send({ error: 'Por favor verifique que todos los campos han sido dilegenciados correctamente' });
-  } else if (!(dia in ['L', 'M', 'X', 'J', 'V', 'S', 'D'])) {
+  } else if (['L', 'M', 'X', 'J', 'V', 'S', 'D'].indexOf(dia) < 0) {
     res.status(400).send({ error: 'Día invalido' });
   } else if (!horaRegex.test(horaInicio) || !horaRegex.test(horaFin)) {
     res.status(400).send({ error: 'Verifique que los horarios estén en formato HH:MM' });
