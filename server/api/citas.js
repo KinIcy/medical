@@ -86,7 +86,7 @@ router.get('/', aeh(async (req, res) => {
       }],
     });
   }
-  res.send({ citas: citas.filter(cita => cita.dataValues) });
+  res.send({ citas: citas.map(cita => cita.dataValues) });
 }));
 
 export default router;

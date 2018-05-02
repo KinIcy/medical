@@ -81,6 +81,19 @@ export async function initialize() {
       idPaciente: paciente.dataValues.idPaciente,
     },
   });
+  await Cita.findOrCreate({
+    where: { comentario: 'Disponibilidad de prueba' },
+    defaults: {
+      fecha: Date.now(),
+      hora: '08:20',
+      duracion: 20,
+      comentario: 'Disponibilidad de prueba',
+      formulacion: '',
+      observaciones: '',
+      estado: 'disponible',
+      idMedico: medico.dataValues.idMedico,
+    },
+  });
 }
 
 export default {
