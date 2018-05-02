@@ -1,10 +1,11 @@
 import { Router } from 'express';
 
 import { models } from '../db';
+import aeh from '../async-error-handler';
 
 const router = Router();
 
-router.post('/', async (req, res) => {
+router.post('/', aeh(async (req, res) => {
   if (req.user.scope.indexOf('admin') < 0) {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
   } else if (!req.body.nombres.length || !req.body.apellidos.length || !req.body.usuario.length ||
@@ -27,27 +28,27 @@ router.post('/', async (req, res) => {
     });
     res.status.send({ status: 'OK' });
   }
-});
+}));
 
-router.get('/', async (req, res) => {
+router.get('/', aeh(async (req, res) => {
   let medicos;
   const attributes = ['idMedico', 'nombres', 'apellidos'];
 
   if (req.user.scope.indexOf('paciente') < 0) {
     medicos = await models.Medico.findAll({ attributes });
   } else {
-    medicos = await models.Medico.findAll({
+    medicos = await models.Cita.findAll({
       include: {
-        model: models.Cita,
-        where: { idPaciente: req.user.idPaciente },
+        model: models.Medico,
+        attributes,
       },
-      attributes,
+      where: { idPaciente: req.user.idPaciente },
     });
   }
   res.send({ medicos: medicos.filter(medico => medico.dataValues) });
-});
+}));
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', aeh(async (req, res) => {
   const attributes = { exclude: ['contraseña'] };
 
   if (req.user.scope.indexOf('paciente') < 0) {
@@ -70,9 +71,9 @@ router.get('/:id', async (req, res) => {
       res.send(medico.dataValues);
     } else res.status(404).send({ error: 'Medico no encontrado o permisos insuficientes' });
   }
-});
+}));
 
-router.get('/agenda', async (req, res) => {
+router.get('/agenda', aeh(async (req, res) => {
   if (res.user.scope.indexOf('medico') < 0) {
     res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   } else {
@@ -81,9 +82,9 @@ router.get('/agenda', async (req, res) => {
     });
     res.send({ agenda: agenda.filter(horario => horario.dataValues) });
   }
-});
+}));
 
-router.post('/agenda', async (req, res) => {
+router.post('/agenda', aeh(async (req, res) => {
   const { dia, horaInicio, horaFin } = req.body;
   const horaRegex = /^\d{2}:\d{2}$/;
   if (res.user.scope.indexOf('medico') < 0) {
@@ -100,9 +101,9 @@ router.post('/agenda', async (req, res) => {
     });
     res.send({ status: 'OK' });
   }
-});
+}));
 
-router.delete('/agenda/:id', async (req, res) => {
+router.delete('/agenda/:id', aeh(async (req, res) => {
   if (res.user.scope.indexOf('medico') < 0) {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
   } else {
@@ -111,6 +112,6 @@ router.delete('/agenda/:id', async (req, res) => {
     });
     res.send({ status: 'OK' });
   }
-});
+}));
 
 export default router;
