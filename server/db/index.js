@@ -40,7 +40,7 @@ Object.keys(models).forEach((modelName) => {
 export async function initialize() {
   await db.authenticate();
   await db.sync();
-  await Paciente.findOrCreate({
+  const [paciente] = await Paciente.findOrCreate({
     where: { numId: '00000000', tipoId: 'PP' },
     defaults: {
       tipoId: 'PP',
@@ -55,7 +55,7 @@ export async function initialize() {
       ciudad: 'Cali',
     },
   });
-  await Medico.findOrCreate({
+  const [medico] = await Medico.findOrCreate({
     where: { usuario: 'test' },
     defaults: {
       nombres: 'Medico',
@@ -65,6 +65,33 @@ export async function initialize() {
       contrasena: 'averyverysecretsecret',
       estado: 'activo',
       esAdmin: true,
+    },
+  });
+  await Cita.findOrCreate({
+    where: { comentario: 'Cita de prueba' },
+    defaults: {
+      fecha: Date.now(),
+      hora: '08:00',
+      duracion: 20,
+      comentario: 'Cita de prueba',
+      formulacion: '',
+      observaciones: '',
+      estado: 'atendida',
+      idMedico: medico.dataValues.idMedico,
+      idPaciente: paciente.dataValues.idPaciente,
+    },
+  });
+  await Cita.findOrCreate({
+    where: { comentario: 'Disponibilidad de prueba' },
+    defaults: {
+      fecha: Date.now(),
+      hora: '08:20',
+      duracion: 20,
+      comentario: 'Disponibilidad de prueba',
+      formulacion: '',
+      observaciones: '',
+      estado: 'disponible',
+      idMedico: medico.dataValues.idMedico,
     },
   });
 }

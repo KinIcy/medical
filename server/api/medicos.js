@@ -37,19 +37,19 @@ router.get('/', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') < 0) {
     medicos = await models.Medico.findAll({ attributes });
   } else {
-    medicos = await models.Cita.findAll({
+    medicos = (await models.Cita.findAll({
       include: {
         model: models.Medico,
         attributes,
       },
       where: { idPaciente: req.user.idPaciente },
-    });
+    })).map(medico => medico.dataValues.medico);
   }
-  res.send({ medicos: medicos.filter(medico => medico.dataValues) });
+  res.send({ medicos });
 }));
 
 router.get('/:id', aeh(async (req, res) => {
-  const attributes = { exclude: ['contraseña'] };
+  const attributes = { exclude: ['contrasena', 'usuario'] };
 
   if (req.user.scope.indexOf('paciente') < 0) {
     const medico = await models.Medico.findOne({
@@ -60,38 +60,39 @@ router.get('/:id', aeh(async (req, res) => {
       res.send(medico.dataValues);
     } else res.status(404).send({ error: 'Medico no encontrado' });
   } else {
-    const medico = await models.Medico.findOne({
+    const medico = await models.Cita.findOne({
       include: {
-        model: models.Cita,
-        where: { idPaciente: req.user.idPaciente },
+        where: { idMedico: req.params.id },
+        model: models.Medico,
+        attributes,
       },
-      attributes,
+      where: { idPaciente: req.user.idPaciente },
     });
     if (medico) {
-      res.send(medico.dataValues);
+      res.send(medico.dataValues.medico);
     } else res.status(404).send({ error: 'Medico no encontrado o permisos insuficientes' });
   }
 }));
 
-router.get('/agenda', aeh(async (req, res) => {
+router.get('/horarios', aeh(async (req, res) => {
   if (res.user.scope.indexOf('medico') < 0) {
     res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   } else {
-    const agenda = await models.Horario.findAll({
+    const horarios = await models.Horario.findAll({
       where: { idMedico: req.user.idMedico },
     });
-    res.send({ agenda: agenda.filter(horario => horario.dataValues) });
+    res.send({ horarios: horarios.filter(horario => horario.dataValues) });
   }
 }));
 
-router.post('/agenda', aeh(async (req, res) => {
+router.post('/horarios', aeh(async (req, res) => {
   const { dia, horaInicio, horaFin } = req.body;
   const horaRegex = /^\d{2}:\d{2}$/;
   if (res.user.scope.indexOf('medico') < 0) {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
   } else if (!dia.length || !horaInicio.length || !horaFin.length) {
     res.status(400).send({ error: 'Por favor verifique que todos los campos han sido dilegenciados correctamente' });
-  } else if (!(dia in ['L', 'M', 'X', 'J', 'V', 'S', 'D'])) {
+  } else if (['L', 'M', 'X', 'J', 'V', 'S', 'D'].indexOf(dia) < 0) {
     res.status(400).send({ error: 'Día invalido' });
   } else if (!horaRegex.test(horaInicio) || !horaRegex.test(horaFin)) {
     res.status(400).send({ error: 'Verifique que los horarios estén en formato HH:MM' });
@@ -103,7 +104,7 @@ router.post('/agenda', aeh(async (req, res) => {
   }
 }));
 
-router.delete('/agenda/:id', aeh(async (req, res) => {
+router.delete('/horarios/:id', aeh(async (req, res) => {
   if (res.user.scope.indexOf('medico') < 0) {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
   } else {
@@ -112,6 +113,14 @@ router.delete('/agenda/:id', aeh(async (req, res) => {
     });
     res.send({ status: 'OK' });
   }
+}));
+
+router.get('/:id/agenda', aeh(async (req, res) => {
+  const disponibilidad = await models.Cita.findAll({
+    where: { idMedico: req.params.id, estado: 'disponible' },
+    attributes: ['fecha', 'hora'],
+  });
+  res.send({ disponibilidad: disponibilidad.map(horario => horario.dataValues) });
 }));
 
 export default router;
