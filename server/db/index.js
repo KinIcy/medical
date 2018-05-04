@@ -97,86 +97,96 @@ export async function initialize() {
   });
 
 
- // Se crean datos de prueba...
- createPatient("11111111", "PP", "María Laura", "Diaz Lunas", "9999999999","activo",
- "5555555555", "mdiaz@gmail.com", "Cali")
+  async function createPatient(
+    pnumId, ptipoId, pnombres, papellidos, pcontrasena, pestado,
+    ptelefono, pcorreo, pciudad,
+  ) {
+    await Paciente.findOrCreate({
+      where: { numId: pnumId, tipoId: ptipoId },
+      defaults: {
+        tipoId: ptipoId,
+        numId: pnumId,
+        nombres: pnombres,
+        apellidos: papellidos,
+        contrasena: pcontrasena,
+        fechaNacimiento: new Date(2000, 1, 1),
+        estado: pestado,
+        telefono: ptelefono,
+        correo: pcorreo,
+        ciudad: pciudad,
+      },
+    });
+  }
 
- createPatient("22222222", "PP", "Henry", " Laus Hyins", "9999999999","activo",
- "5555555555", "hlaus@gmail.com", "Cali")
+  async function createMedical(puser, pnombres, papellidos, pespecialidad, pcontrasena, pestado) {
+    await Medico.findOrCreate({
+      where: { usuario: puser },
+      defaults: {
+        nombres: pnombres,
+        apellidos: papellidos,
+        usuario: puser,
+        especialidad: pespecialidad,
+        contrasena: pcontrasena,
+        estado: pestado,
+        esAdmin: true,
+      },
+    });
+  }
 
- createPatient("33333333", "PP", "Florencia", "Frachia", "9999999999","activo",
- "5555555555", "ffrachia@gmail.com", "Cali")
+  async function createCita(
+    pfecha,
+    phora, pduracion, pcomentario, pestado, pidMedico, pidPaciente,
+  ) {
+    await Cita.findOrCreate({
+      where: { comentario: pcomentario },
+      defaults: {
+        fecha: pfecha,
+        hora: phora,
+        duracion: pduracion,
+        comentario: pcomentario,
+        formulacion: '',
+        observaciones: '',
+        estado: pestado,
+        idMedico: pidMedico,
+        idPaciente: pidPaciente,
+      },
+    });
+  }
 
- createMedical("DIEGO.FUENTES", "Diego", "Fuentez", "Cardiologo","999999999", "activo")
- createMedical("JUAN.LUZ", "Juan", "Luz", "Cardiologo","999999999", "activo")
- createMedical("DIANA.RIOS", "Diana María", "Rios", "Neurologo","999999999", "activo")
- createMedical("JOSE.BENAVIDEZ", "Jose", "Benaviez", "General","999999999", "activo")
- createMedical("PALOMA.SAMBUSSI", "Paloma", "Sambussi", "General","999999999", "activo")
- createMedical("LISA.DELBOSQUE", "Lisa", "Del Bosque", "General","999999999", "activo")
- createMedical("ARIEL.PEREZ", "Ariel", "Perez", "General","999999999", "activo")
- createMedical("ALVARO.SUSQUI", "Álvaro", "Susqui", "General","999999999", "activo")
- createMedical("LILY.ASQUI", "Lily", "Asqui", "General","999999999", "activo")
- createMedical("TOM.SUIEZ", "Tom", "Suiez", "General","999999999", "activo")
- createMedical("URBELO.NANO", "Urbelo", "Nano", "General","999999999", "activo")
- createMedical("SUAD.TELLO", "Suad", "Tello", "General","999999999", "activo")
- createMedical("HENRY.DIAZ", "Hendry", "Dias", "General","999999999", "activo")
- createMedical("TOM.SUIEZ", "Tom", "Suiez", "General","999999999", "activo")
- createMedical("ANA.REY", "Ana María", "Rey", "Cardiologo","999999999", "activo")
+
+  // Se crean datos de prueba...
+  await createPatient(
+    '11111111', 'PP', 'María Laura', 'Diaz Lunas', '9999999999', 'activo',
+    '5555555555', 'mdiaz@gmail.com', 'Cali',
+  );
+
+  await createPatient(
+    '22222222', 'PP', 'Henry', ' Laus Hyins', '9999999999', 'activo',
+    '5555555555', 'hlaus@gmail.com', 'Cali',
+  );
+
+  await createPatient(
+    '33333333', 'PP', 'Florencia', 'Frachia', '9999999999', 'activo',
+    '5555555555', 'ffrachia@gmail.com', 'Cali',
+  );
+
+  await createMedical('DIEGO.FUENTES', 'Diego', 'Fuentez', 'Cardiologo', '999999999', 'activo');
+  await createMedical('JUAN.LUZ', 'Juan', 'Luz', 'Cardiologo', '999999999', 'activo');
+  await createMedical('DIANA.RIOS', 'Diana María', 'Rios', 'Neurologo', '999999999', 'activo');
+  await createMedical('JOSE.BENAVIDEZ', 'Jose', 'Benaviez', 'General', '999999999', 'activo');
+  await createMedical('PALOMA.SAMBUSSI', 'Paloma', 'Sambussi', 'General', '999999999', 'activo');
+  await createMedical('LISA.DELBOSQUE', 'Lisa', 'Del Bosque', 'General', '999999999', 'activo');
+  await createMedical('ARIEL.PEREZ', 'Ariel', 'Perez', 'General', '999999999', 'activo');
+  await createMedical('ALVARO.SUSQUI', 'Álvaro', 'Susqui', 'General', '999999999', 'activo');
+  await createMedical('LILY.ASQUI', 'Lily', 'Asqui', 'General', '999999999', 'activo');
+  await createMedical('TOM.SUIEZ', 'Tom', 'Suiez', 'General', '999999999', 'activo');
+  await createMedical('URBELO.NANO', 'Urbelo', 'Nano', 'General', '999999999', 'activo');
+  await createMedical('SUAD.TELLO', 'Suad', 'Tello', 'General', '999999999', 'activo');
+  await createMedical('HENRY.DIAZ', 'Hendry', 'Dias', 'General', '999999999', 'activo');
+  await createMedical('TOM.SUIEZ', 'Tom', 'Suiez', 'General', '999999999', 'activo');
+  await createMedical('ANA.REY', 'Ana María', 'Rey', 'Cardiologo', '999999999', 'activo');
 }
 
 export default {
   db, initialize, models,
 };
-
-function createPatient(pnumId, ptipoId, pnombres, papellidos, pcontrasena, pestado, ptelefono, pcorreo, pciudad){
-
-  const [paciente] = await Paciente.findOrCreate({
-    where: { numId: pnumId, tipoId: ptipoId },
-    defaults: {
-      tipoId: ptipoId,
-      numId: pnumId,
-      nombres: pnombres,
-      apellidos: papellidos,
-      contrasena: pcontrasena,
-      fechaNacimiento: new Date(2000, 1, 1),
-      estado: pestado,
-      telefono: ptelefono,
-      correo: pcorreo,
-      ciudad: pciudad,
-    },
-  });
-}
-
-function createMedical(puser, pnombres, papellidos, pespecialidad, pcontrasena pestado){
-
-  const [medico] = await Medico.findOrCreate({
-    where: { usuario: puser },
-    defaults: {
-      nombres: pnombres,
-      apellidos: papellidos,
-      usuario: puser,
-      especialidad: pespecialidad,
-      contrasena: pcontrasena,
-      estado: pestado,
-      esAdmin: true,
-    },
-  });
-}
-
-function createCita(pfecha, phora, pduracion, pcomentario, pestado, pidMedico, pidPaciente){
-
-  await Cita.findOrCreate({
-    where: { comentario: pcomentario },
-    defaults: {
-      fecha: pfecha,
-      hora: phora,
-      duracion: pduracion,
-      comentario: pcomentario,
-      formulacion: '',
-      observaciones: '',
-      estado: pestado,
-      idMedico: pidMedico,
-      idPaciente: pidPaciente,
-    },
-  });
-}
