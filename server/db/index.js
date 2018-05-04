@@ -41,37 +41,6 @@ export async function initialize() {
   await db.authenticate();
   await db.sync();
 
-  function createPatient(pnumId, ptipoId, pnombres, papellidos, pcontrasena, pestado, ptelefono, pcorreo, pciudad){
-
-    const [paciente] = await Paciente.findOrCreate({
-      where: { numId: pnumId, tipoId: ptipoId },
-      defaults: {
-        tipoId: ptipoId,
-        numId: pnumId,
-        nombres: pnombres,
-        apellidos: papellidos,
-        contrasena: pcontrasena,
-        fechaNacimiento: new Date(2000, 1, 1),
-        estado: pestado,
-        telefono: ptelefono,
-        correo: pcorreo,
-        ciudad: pciudad,
-      },
-    });
-  }
-
-  createPatient("11111111", "PP", "María Laura", "Diaz Lunas", "9999999999","activo",
-  "5555555555", "mdiaz@gmail.com", "Cali")
-
-  createPatient("22222222", "PP", "Henry", " Laus Hyins", "9999999999","activo",
-  "5555555555", "hlaus@gmail.com", "Cali")
-
-  createPatient("33333333", "PP", "Florencia", "Frachia", "9999999999","activo",
-  "5555555555", "ffrachia@gmail.com", "Cali")
-
-
-
-
   const [paciente] = await Paciente.findOrCreate({
     where: { numId: '00000000', tipoId: 'PP' },
     defaults: {
@@ -128,7 +97,15 @@ export async function initialize() {
   });
 
 
- // Se crean datos de prueba..
+ // Se crean datos de prueba...
+ createPatient("11111111", "PP", "María Laura", "Diaz Lunas", "9999999999","activo",
+ "5555555555", "mdiaz@gmail.com", "Cali")
+
+ createPatient("22222222", "PP", "Henry", " Laus Hyins", "9999999999","activo",
+ "5555555555", "hlaus@gmail.com", "Cali")
+
+ createPatient("33333333", "PP", "Florencia", "Frachia", "9999999999","activo",
+ "5555555555", "ffrachia@gmail.com", "Cali")
 
  createMedical("DIEGO.FUENTES", "Diego", "Fuentez", "Cardiologo","999999999", "activo")
  createMedical("JUAN.LUZ", "Juan", "Luz", "Cardiologo","999999999", "activo")
