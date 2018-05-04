@@ -128,8 +128,7 @@ export default {
 };
 
 function createPatient(pnumId, ptipoId, pnombres, papellidos, pcontrasena, pestado, ptelefono, pcorreo, pciudad){
-  await db.authenticate();
-  await db.sync();
+
   const [paciente] = await Paciente.findOrCreate({
     where: { numId: pnumId, tipoId: ptipoId },
     defaults: {
@@ -148,8 +147,7 @@ function createPatient(pnumId, ptipoId, pnombres, papellidos, pcontrasena, pesta
 }
 
 function createMedical(puser, pnombres, papellidos, pespecialidad, pcontrasena pestado){
-  await db.authenticate();
-  await db.sync();
+
   const [medico] = await Medico.findOrCreate({
     where: { usuario: puser },
     defaults: {
@@ -165,8 +163,7 @@ function createMedical(puser, pnombres, papellidos, pespecialidad, pcontrasena p
 }
 
 function createCita(pfecha, phora, pduracion, pcomentario, pestado, pidMedico, pidPaciente){
-  await db.authenticate();
-  await db.sync();
+
   await Cita.findOrCreate({
     where: { comentario: pcomentario },
     defaults: {
