@@ -127,7 +127,7 @@ export default {
   db, initialize, models,
 };
 
-function createPatient(pnumId, ptipoId, pnombres, papellidos, pcontrasena, pestado
+function createPatient(pnumId, ptipoId, pnombres, papellidos, pcontrasena, pestado,
                     ptelefono, pcorreo, pciudad){
   await db.authenticate();
   await db.sync();
