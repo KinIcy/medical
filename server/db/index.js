@@ -127,8 +127,7 @@ export default {
   db, initialize, models,
 };
 
-function createPatient(pnumId, ptipoId, pnombres, papellidos, pcontrasena, pestado,
-                    ptelefono, pcorreo, pciudad){
+function createPatient(pnumId, ptipoId, pnombres, papellidos, pcontrasena, pestado, ptelefono, pcorreo, pciudad){
   await db.authenticate();
   await db.sync();
   const [paciente] = await Paciente.findOrCreate({
