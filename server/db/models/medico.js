@@ -17,5 +17,9 @@ export default function (db) {
     esAdmin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
   });
 
+  Medico.associate = ({ Cita }) => {
+    Medico.hasMany(Cita, { foreignKey: 'idMedico' });
+  };
+
   return Medico;
 }

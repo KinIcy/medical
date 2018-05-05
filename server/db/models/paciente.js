@@ -20,5 +20,9 @@ export default function (db) {
     ciudad: { type: Sequelize.STRING(20), allowNull: false },
   });
 
+  Paciente.associate = ({ Cita }) => {
+    Paciente.hasMany(Cita, { foreignKey: 'idPaciente' });
+  };
+
   return Paciente;
 }

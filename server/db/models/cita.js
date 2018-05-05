@@ -14,7 +14,11 @@ export default function (db) {
     comentario: { type: Sequelize.TEXT },
     formulacion: { type: Sequelize.TEXT },
     observaciones: { type: Sequelize.TEXT },
-    estado: { type: Sequelize.ENUM('reservada', 'cancelada', 'atendida', 'disponible'), allowNull: false, defaultValue: 'reservada' },
+    estado: {
+      type: Sequelize.ENUM('reservada', 'cancelada', 'atendida', 'disponible', 'no asistida'),
+      allowNull: false,
+      defaultValue: 'reservada',
+    },
   });
 
   Cita.associate = ({ Medico, Paciente }) => {
