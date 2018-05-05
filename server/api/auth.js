@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
         contrasena,
         estado: 'activo',
       },
-      attributes: ['idPaciente', 'tipoId', 'numId', 'nombres', 'apellidos'],
+      attributes: { exclude: ['contrasena'] },
     });
     if (!paciente) {
       res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
