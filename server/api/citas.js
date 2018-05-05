@@ -41,7 +41,7 @@ router.post('/', aeh(async (req, res) => {
           where: { idCita: cita.idCita },
         });
         if (updateCount !== 2) {
-          res.status(500).send({ error: 'Ocurrió un error al crear la cita' });
+          res.status(500).send({ error: 'Ocurrió un error al reservar la cita' });
         } else res.send({ status: 'OK' });
       }
     }
@@ -87,6 +87,70 @@ router.get('/', aeh(async (req, res) => {
     });
   }
   res.send({ citas: citas.map(cita => cita.dataValues) });
+}));
+
+router.put('/:id', aeh(async (req, res) => {
+  const { noAsistida, observaciones, formulacion } = req.body;
+  if (req.user.scope.indexOf('paciente') >= 0) {
+    res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
+  } else {
+    const cita = await models.Cita.findById(req.params.id);
+    if (!cita) {
+      res.status(404).send({ error: 'Cita no encontrada' });
+    } else if (cita.dataValues.estado !== 'reservado') {
+      res.status(400).send({ error: 'No puedes alterar una cita con un estado diferente a reservada' });
+    } else if (noAsistida) {
+      const [updateCount] = await models.Cita.update({
+        estado: 'no asistida',
+      }, {
+        where: { idCita: cita.idCita },
+      });
+      if (!updateCount) {
+        res.status(500).send({ error: 'Ocurrio un error al actualizar la cita' });
+      } else {
+        res.send({ status: 'OK' });
+      }
+    } else {
+      const [updateCount] = await models.Cita.update({
+        estado: 'atendida',
+        observaciones,
+        formulacion,
+      }, {
+        where: { idCita: cita.idCita },
+      });
+      if (!updateCount) {
+        res.status(500).send({ error: 'Ocurrio un error al actualizar la cita' });
+      } else {
+        res.send({ status: 'OK' });
+      }
+    }
+  }
+}));
+
+router.delete('/:id', aeh(async (req, res) => {
+  if (req.user.scope.indexOf('paciente') >= 0) {
+    const cita = await models.findOne({
+      where: { idCita: req.params.id },
+    });
+    if (!cita) {
+      res.status(404).send({ error: 'Cita no encontrada' });
+    } else if (cita.idPaciente !== req.user.idPaciente) {
+      res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
+    } else if (cita.estado !== 'reservada') {
+      res.status(400).send({ error: 'No puedes cancelar una cita que no esté reservada, o ya esté cancelada o atendida' });
+    } else {
+      const [updateCount] = await models.Cita.update({
+        estado: 'cancelada',
+      }, {
+        where: { idCita: req.params.id },
+      });
+      if (!updateCount) {
+        res.status(500).send({ error: 'Ocurrio un error al actualizar la cita' });
+      } else {
+        res.send({ status: 'OK' });
+      }
+    }
+  }
 }));
 
 export default router;
