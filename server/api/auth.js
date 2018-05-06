@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import jsonwebtoken from 'jsonwebtoken';
 import { models } from '../db';
+import aeh from '../async-error-handler';
 
 const secret = 'dummy' || process.env.SECRET;
 const router = Router();
 
-router.post('/login', async (req, res) => {
+router.post('/login', aeh(async (req, res) => {
   const { tipo, usuario, contrasena } = req.body;
   let accessToken;
   if (!usuario || usuario.length < 3) {
@@ -28,9 +29,9 @@ router.post('/login', async (req, res) => {
       accessToken = jsonwebtoken.sign(Object.assign(paciente.dataValues, { scope: ['paciente'] }), secret);
     }
   } else if (tipo === 'medico') {
-    const medico = await models.Paciente.findOne({
+    const medico = await models.Medico.findOne({
       where: { usuario, contrasena, estado: 'activo' },
-      attributes: ['nombres', 'apellidos', 'esAdmin'],
+      attributes: ['nombres', 'apellidos', 'esAdmin', 'idMedico'],
     });
     if (!medico) {
       res.status(404).send({ error: 'Combinación de usuario y contraseña invalida, o usuario inactivo' });
@@ -45,7 +46,7 @@ router.post('/login', async (req, res) => {
   } else {
     res.status(500).send({ error: 'Algo inesperado ocurrió ' });
   }
-});
+}));
 
 router.get('/user', (req, res) => {
   res.json(req.user);
