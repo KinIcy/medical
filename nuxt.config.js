@@ -11,12 +11,9 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', type: 'text/css', href: 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' },
     ],
   },
-  /*
-  ** Global CSS
-  */
-  css: ['~/assets/css/main.css'],
   /*
   ** Add axios globally
   */
@@ -39,6 +36,18 @@ module.exports = {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/auth',
+  ],
+  css: [
+    'bootstrap/dist/css/bootstrap.css',
+    'vue-notifyjs/themes/default.scss',
+    '~/assets/sass/light-bootstrap-dashboard.scss',
+    '~/static/css/nucleo-icons.css',
+  ],
+  plugins: [
+    '~/plugins/global-components',
+    '~/plugins/global-directives',
+    '~/plugins/sidebar',
+    '~/plugins/light-bootstrap-main',
   ],
   auth: {
     rewriteRedirects: false,
