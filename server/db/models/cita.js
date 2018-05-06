@@ -28,7 +28,7 @@ export default function (db) {
   };
 
   Cita.programarCitas = async ({ Horario }, idMedico) => {
-    const [horarios] = await Horario.findAll({
+    const horarios = await Horario.findAll({
       where: { idMedico },
     });
     if (!horarios) {
@@ -37,10 +37,12 @@ export default function (db) {
       throw error;
     } else {
       await Promise.all(horarios.map(async (horario) => {
-        const timer = moment(horario.horaInicio);
+        console.log(horario.horaInicio);
+        const timer = moment(horario.horaInicio, ['HH:mm:ss']);
         const horas = [];
         const fecha = moment().day(horario.dia).toDate();
-        while (timer.isBefore(horario.horaFin)) {
+        const fin = moment(horario.horaFin, ['HH:mm:ss']);
+        while (timer.isBefore(fin)) {
           horas.push(timer.format('HH:mm'));
           timer.add(20, 'minutes');
         }
