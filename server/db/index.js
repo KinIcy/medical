@@ -133,27 +133,6 @@ export async function initialize() {
     });
   }
 
-  async function createCita(
-    pfecha,
-    phora, pduracion, pcomentario, pestado, pidMedico, pidPaciente,
-  ) {
-    await Cita.findOrCreate({
-      where: { comentario: pcomentario },
-      defaults: {
-        fecha: pfecha,
-        hora: phora,
-        duracion: pduracion,
-        comentario: pcomentario,
-        formulacion: '',
-        observaciones: '',
-        estado: pestado,
-        idMedico: pidMedico,
-        idPaciente: pidPaciente,
-      },
-    });
-  }
-
-
   // Se crean datos de prueba...
   await createPatient(
     '11111111', 'PP', 'María Laura', 'Diaz Lunas', '9999999999', 'activo',
