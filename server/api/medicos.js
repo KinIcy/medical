@@ -37,14 +37,13 @@ router.get('/', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') < 0) {
     medicos = await models.Medico.findAll({ attributes });
   } else {
-    [medicos] = await models.Medico.findAll({
+    medicos = await models.Medico.findAll({
       attributes,
       include: [{
         model: models.Cita,
         where: { idPaciente: req.user.idPaciente },
         required: true,
-        separate: true,
-        limit: 0,
+        attributes: [],
       }],
     });
   }
