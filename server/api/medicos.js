@@ -50,6 +50,47 @@ router.get('/', aeh(async (req, res) => {
   res.send({ medicos });
 }));
 
+router.get('/horarios', aeh(async (req, res) => {
+  if (req.user.scope.indexOf('paciente') >= 0) {
+    res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
+  } else {
+    const horarios = await models.Horario.findAll({
+      where: { idMedico: req.user.idMedico },
+    });
+    res.send({ horarios: horarios.map(horario => horario.dataValues) });
+  }
+}));
+
+router.post('/horarios', aeh(async (req, res) => {
+  const { dia, horaInicio, horaFin } = req.body;
+  const horaRegex = /^\d{2}:\d{2}$/;
+  if (req.user.scope.indexOf('paciente') >= 0) {
+    res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
+  } else if (!dia.length || !horaInicio.length || !horaFin.length) {
+    res.status(400).send({ error: 'Por favor verifique que todos los campos han sido dilegenciados correctamente' });
+  } else if (parseInt(dia, 10) < 1 || parseInt(dia, 10) > 7) {
+    res.status(400).send({ error: 'Día invalido' });
+  } else if (!horaRegex.test(horaInicio) || !horaRegex.test(horaFin)) {
+    res.status(400).send({ error: 'Verifique que los horarios estén en formato HH:MM' });
+  } else {
+    await models.Horario.create({
+      dia, horaInicio, horaFin, idMedico: req.user.idMedico,
+    });
+    res.send({ status: 'OK' });
+  }
+}));
+
+router.delete('/horarios/:id', aeh(async (req, res) => {
+  if (req.user.scope.indexOf('medico') < 0) {
+    res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
+  } else {
+    await models.Horario.destroy({
+      where: { idHorario: req.params.id, idMedico: req.user.idMedico },
+    });
+    res.send({ status: 'OK' });
+  }
+}));
+
 router.get('/:id', aeh(async (req, res) => {
   const attributes = { exclude: ['contrasena', 'usuario'] };
 
@@ -76,53 +117,21 @@ router.get('/:id', aeh(async (req, res) => {
   }
 }));
 
-router.get('/horarios', aeh(async (req, res) => {
-  if (res.user.scope.indexOf('medico') < 0) {
-    res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
-  } else {
-    const horarios = await models.Horario.findAll({
-      where: { idMedico: req.user.idMedico },
-    });
-    res.send({ horarios: horarios.filter(horario => horario.dataValues) });
-  }
-}));
-
-router.post('/horarios', aeh(async (req, res) => {
-  const { dia, horaInicio, horaFin } = req.body;
-  const horaRegex = /^\d{2}:\d{2}$/;
-  if (res.user.scope.indexOf('medico') < 0) {
-    res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
-  } else if (!dia.length || !horaInicio.length || !horaFin.length) {
-    res.status(400).send({ error: 'Por favor verifique que todos los campos han sido dilegenciados correctamente' });
-  } else if (['L', 'M', 'X', 'J', 'V', 'S', 'D'].indexOf(dia) < 0) {
-    res.status(400).send({ error: 'Día invalido' });
-  } else if (!horaRegex.test(horaInicio) || !horaRegex.test(horaFin)) {
-    res.status(400).send({ error: 'Verifique que los horarios estén en formato HH:MM' });
-  } else {
-    await models.Horario.create({
-      dia, horaInicio, horaFin, idMedico: req.user.idMedico,
-    });
-    res.send({ status: 'OK' });
-  }
-}));
-
-router.delete('/horarios/:id', aeh(async (req, res) => {
-  if (res.user.scope.indexOf('medico') < 0) {
-    res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
-  } else {
-    await models.Horario.destroy({
-      where: { idHorario: req.params.id, idMedico: req.user.idMedico },
-    });
-    res.send({ status: 'OK' });
-  }
-}));
-
 router.get('/:id/agenda', aeh(async (req, res) => {
-  const disponibilidad = await models.Cita.findAll({
+  let disponibilidad = await models.Cita.findAll({
     where: { idMedico: req.params.id, estado: 'disponible' },
     attributes: ['fecha', 'hora'],
   });
-  res.send({ disponibilidad: disponibilidad.map(horario => horario.dataValues) });
+  if (!disponibilidad.length) {
+    try {
+      disponibilidad = await models.Cita.programarCitas(models, req.params.id);
+    } catch (error) {
+      res.status(error.status).send({ error: error.message });
+    }
+  }
+  if (disponibilidad.length) {
+    res.send({ disponibilidad: disponibilidad.map(horario => horario.dataValues) });
+  }
 }));
 
 export default router;
