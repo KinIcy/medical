@@ -122,16 +122,18 @@ router.get('/:id/agenda', aeh(async (req, res) => {
     where: { idMedico: req.params.id, estado: 'disponible' },
     attributes: ['fecha', 'hora'],
   });
-  if (!disponibilidad.length) {
+  if (disponibilidad.length < 5) {
     try {
       disponibilidad = await models.Cita.programarCitas(models, req.params.id);
     } catch (error) {
-      res.status(error.status).send({ error: error.message });
+      res.status(error.status || 500).send({ error: error.message });
     }
   }
-  if (disponibilidad.length) {
-    res.send({ disponibilidad: disponibilidad.map(horario => horario.dataValues) });
-  }
+  disponibilidad = await models.Cita.findAll({
+    where: { idMedico: req.params.id, estado: 'disponible' },
+    attributes: ['fecha', 'hora'],
+  });
+  res.send({ disponibilidad: disponibilidad.map(horario => horario.dataValues) });
 }));
 
 export default router;
