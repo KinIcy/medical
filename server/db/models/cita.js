@@ -1,4 +1,5 @@
 import Sequelize from 'sequelize';
+import moment from 'moment';
 
 export default function (db) {
   const Cita = db.define('cita', {
@@ -24,6 +25,35 @@ export default function (db) {
   Cita.associate = ({ Medico, Paciente }) => {
     Cita.belongsTo(Medico, { foreignKey: 'idMedico' });
     Cita.belongsTo(Paciente, { foreignKey: 'idPaciente' });
+  };
+
+  Cita.programarCitas = async ({ Horario }, idMedico) => {
+    const [horarios] = await Horario.findAll({
+      where: { idMedico },
+    });
+    if (!horarios) {
+      const error = new Error('El medico no tiene horarios definidos');
+      error.status = 400;
+      throw error;
+    } else {
+      await Promise.all(horarios.map(async (horario) => {
+        const timer = moment(horario.horaInicio);
+        const horas = [];
+        const fecha = moment().day(horario.dia).toDate();
+        while (timer.isBefore(horario.horaFin)) {
+          horas.push(timer.format('HH:mm'));
+          timer.add(20, 'minutes');
+        }
+        await Promise.all(horas.map(async (hora) => {
+          await Cita.findOrCreate({
+            where: { hora, fecha, idMedico },
+            defaults: {
+              hora, fecha, duracion: 20, idMedico, estado: 'disponible',
+            },
+          });
+        }));
+      }));
+    }
   };
 
   return Cita;

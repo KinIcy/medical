@@ -8,7 +8,7 @@ export default function (db) {
       primaryKey: true,
       autoIncrement: true,
     },
-    dia: { type: Sequelize.ENUM('L', 'M', 'X', 'J', 'V', 'S', 'D'), allowNull: false },
+    dia: { type: Sequelize.SMALLINT, allowNull: false },
     horaInicio: { type: Sequelize.TIME, allowNull: false },
     horaFin: { type: Sequelize.TIME, allowNull: false },
   });
