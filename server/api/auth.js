@@ -43,8 +43,6 @@ router.post('/login', aeh(async (req, res) => {
   }
   if (accessToken) {
     res.json({ token: accessToken });
-  } else {
-    res.status(500).send({ error: 'Algo inesperado ocurrió ' });
   }
 }));
 
