@@ -5,7 +5,7 @@
        :data-image="backgroundImage">
     <div class="sidebar-wrapper">
       <div class="logo">
-        <a href="#" class="simple-text">
+        <a href="/medical" class="simple-text">
             <div class="logo-img">
                 <img src="/img/vue-logo.png" alt="">
             </div>
@@ -40,11 +40,11 @@
     props: {
       title: {
         type: String,
-        default: 'Vue LBD',
+        default: 'Medical',
       },
       backgroundColor: {
         type: String,
-        default: 'black',
+        default: 'azure',
         validator: (value) => {
           const acceptedValues = ['', 'blue', 'azure', 'green', 'orange', 'red', 'purple', 'black'];
           return acceptedValues.indexOf(value) !== -1;
@@ -52,7 +52,7 @@
       },
       backgroundImage: {
         type: String,
-        default: 'img/sidebar-5.jpg',
+        default: 'img/sidebar.jpg',
       },
       activeColor: {
         type: String,

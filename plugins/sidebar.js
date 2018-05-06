@@ -9,7 +9,7 @@ const SidebarStore = {
     {
       name: 'Dashboard',
       icon: 'ti-panel',
-      path: '/admin/overview',
+      path: '/',
     },
   ],
   displaySidebar(value) {
@@ -28,10 +28,10 @@ Vue.mixin({
 Vue.component('side-bar', Sidebar);
 Vue.component('sidebar-link', SidebarLink);
 
-export default ({ app }) => {
+export default ({ app, sidebarStore }) => {
   Object.defineProperty(app, '$sidebar', {
     get() {
-      return this.$root.sidebarStore;
+      return sidebarStore;
     },
   });
 };
