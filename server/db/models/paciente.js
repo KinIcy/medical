@@ -24,5 +24,30 @@ export default function (db) {
     Paciente.hasMany(Cita, { foreignKey: 'idPaciente' });
   };
 
+  Paciente.editarPaciente = async (pPaciente) => {
+    const paciente = await Paciente.findOne({
+      where: { idPaciente: pPaciente.idPaciente },
+    });
+
+    if (!paciente) {
+      const error = new Error('No existe el paciente.');
+      error.status = 404;
+      throw error;
+    } else {
+      const [updateCount] = await Paciente.update({
+        telefono: pPaciente.telefono,
+        correo: pPaciente.correo,
+        ciudad: pPaciente.ciudad,
+      }, {
+        where: { idPaciente: pPaciente.idPaciente },
+      });
+      if (!updateCount) {
+        const error = new Error('Ocurrió un error al intentar actualizar los datos del Paciente.');
+        error.status = 500;
+        throw error;
+      }
+    }
+  };
+
   return Paciente;
 }

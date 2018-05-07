@@ -2,6 +2,8 @@ import { Router } from 'express';
 
 import { models } from '../db';
 
+import aeh from '../async-error-handler';
+
 const router = Router();
 
 router.post('/', async (req, res) => {
@@ -39,6 +41,19 @@ router.get('/', async (req, res) => {
     res.send({ pacientes: pacientes.filter(paciente => paciente.dataValues) });
   }
 });
+
+router.put('/:id', aeh(async (req, res) => {
+  if (req.user.scope.indexOf('paciente') >= 0 && (req.user.idPaciente !== req.params.id)) {
+    res.status(401).send({ error: 'No tienes permisos para realizar esta acción.' });
+  } else {
+    await models.Paciente.editarPaciente({
+      idPaciente: req.body.idPaciente,
+      telefono: req.body.telefono,
+      correo: req.body.correo,
+      ciudad: req.body.ciudad,
+    });
+  }
+}));
 
 router.get('/:id', async (req, res) => {
   if (req.user.scope.indexOf('paciente') >= 0) {
