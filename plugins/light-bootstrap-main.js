@@ -9,7 +9,9 @@ import 'es6-promise/auto';
   * related plugins are registerd.
  */
 import Vue from 'vue';
+import VueResource from 'vue-resource';
+
 
 Vue.use(Notifications);
+Vue.use(VueResource);
 // Vue.use(VTooltip);
-
