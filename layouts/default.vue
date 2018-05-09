@@ -14,6 +14,10 @@
         <i class="nc-icon nc-notes"></i>
         <p>Registrar Paciente</p>
       </sidebar-link>
+      <sidebar-link to="/medical/registrar-medico">
+        <i class="nc-icon nc-notes"></i>
+        <p>Registrar Médico</p>
+      </sidebar-link>
       <sidebar-link to="/medical/programar-cita">
         <i class="nc-icon nc-paper-2"></i>
         <p>Programar Cita</p>
