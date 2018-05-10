@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <card class="login-card">
-      <h3 slot="header" class="title text-center">Registrar Paciente</h3>
-      <form @submit.prevent="OnSumbit">
-        <template>
+  <div class="content">
+    <div class="container-fluid">
+      <card>
+        <h4 slot="header" class="card-title">Registrar Paciente</h4>
+        <form @submit.prevent="OnSumbit">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
@@ -27,7 +27,6 @@
             </div>
             <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion">
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
@@ -36,7 +35,6 @@
             </div>
             <input v-model="contrasena" type="password" class="form-control" placeholder="Contraseña" >
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
@@ -45,7 +43,6 @@
             </div>
             <input v-model="nombres" type="text" class="form-control" placeholder="Nombres">
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
@@ -54,7 +51,6 @@
             </div>
             <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos">
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
@@ -63,7 +59,6 @@
             </div>
             <input v-model="fechaNacimiento" type="date" class="form-control" placeholder="Fecha de Nacimeinto">
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
@@ -72,7 +67,6 @@
             </div>
             <input v-model="telefono" type="text" class="form-control" placeholder="Teléfono">
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
@@ -81,7 +75,6 @@
             </div>
             <input v-model="Ciudad" type="text" class="form-control" placeholder="Ciudad">
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
@@ -90,16 +83,10 @@
             </div>
             <input v-model="direccion" type="text" class="form-control" placeholder="Dirección">
           </div>
-
-          <div class="input-group">
-            <radio v-model="estado" label="activo">Activo</radio>
-            <radio v-model="estado" label="inactivo">Inactivo</radio>
-          </div>
-
-        </template>
-        <button class="btn btn-primary btn-block" type="submit">Crear Paciente</button>
-      </form>
-    </card>
+          <button class="btn btn-primary btn-block" type="submit">Crear Paciente</button>
+        </form>
+      </card>
+    </div>
   </div>
 </template>
 
@@ -127,7 +114,7 @@ export default {
   methods: {
     async OnSumbit() {
       try {
-        const response = await this.$axios.post('https://puj-medical.herokuapp.com/api/pacientes', {
+        await this.$axios.post('https://puj-medical.herokuapp.com/api/pacientes', {
           data: {
             tipoId: this.tipo,
             numId: this.numId,
@@ -139,11 +126,9 @@ export default {
             direccion: this.direccion,
           },
         });
-        console.log(response);
         this.$router.replace({ path: '/medical/' });
       } catch (error) {
         const errorMessage = error.response ? error.response.data.error : error.message;
-        console.log(errorMessage);
         this.$notify({
           message: `${errorMessage}`,
           icon: 'fa fa-times',
@@ -156,11 +141,3 @@ export default {
   },
 };
 </script>
-<style>
-
-  .login-card {
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-</style>
