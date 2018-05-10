@@ -37,7 +37,6 @@ export default function (db) {
       throw error;
     } else {
       await Promise.all(horarios.map(async (horario) => {
-        console.log(horario.horaInicio);
         const timer = moment(horario.horaInicio, ['HH:mm:ss']);
         const horas = [];
         const fecha = moment().day(horario.dia).toDate();
