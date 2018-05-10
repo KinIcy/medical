@@ -6,7 +6,7 @@ import aeh from '../async-error-handler';
 
 const router = Router();
 
-router.post('/', async (req, res) => {
+router.post('/', aeh(async (req, res) => {
   if (!req.body.nombres.length || !res.body.apellidos.length || !res.body.numId.length ||
     !res.body.fechaNacimiento.length || !res.body.telefono.length || !res.body.correo.length ||
     !res.body.ciudad.length || !res.body.tipoId.length
@@ -29,9 +29,9 @@ router.post('/', async (req, res) => {
     });
     res.status(201).send({ status: 'OK' });
   }
-});
+}));
 
-router.get('/', async (req, res) => {
+router.get('/', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') >= 0) {
     res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   } else {
@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
     });
     res.send({ pacientes: pacientes.filter(paciente => paciente.dataValues) });
   }
-});
+}));
 
 router.put('/:id', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') >= 0 && (req.user.idPaciente !== req.params.id)) {
@@ -55,7 +55,7 @@ router.put('/:id', aeh(async (req, res) => {
   }
 }));
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') >= 0) {
     res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   } else {
@@ -67,9 +67,9 @@ router.get('/:id', async (req, res) => {
       res.send(paciente.dataValues);
     } else res.status(404).send({ error: 'Paciente no encontrado' });
   }
-});
+}));
 
-router.get('/historial', async (req, res) => {
+router.get('/historial', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') < 0) {
     res.status(401).send({ error: 'Es necesario iniciar sesión como paciente' });
   } else {
@@ -78,9 +78,9 @@ router.get('/historial', async (req, res) => {
     });
     res.send({ citas: citas.filter(cita => cita.dataValues) });
   }
-});
+}));
 
-router.get('/:id/historial', async (req, res) => {
+router.get('/:id/historial', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') >= 0) {
     res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   } else {
@@ -97,7 +97,7 @@ router.get('/:id/historial', async (req, res) => {
       res.send({ citas: citas.filter(cita => cita.dataValues) });
     }
   }
-});
+}));
 
 
 export default router;
