@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import crypto from 'crypto';
 
 import { models } from '../db';
 
@@ -7,9 +8,11 @@ import aeh from '../async-error-handler';
 const router = Router();
 
 router.post('/', aeh(async (req, res) => {
-  if (!req.body.nombres.length || !res.body.apellidos.length || !res.body.numId.length ||
-    !res.body.fechaNacimiento.length || !res.body.telefono.length || !res.body.correo.length ||
-    !res.body.ciudad.length || !res.body.tipoId.length
+  if (req.user.scope.indexOf('paciente') >= 0) {
+    res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
+  } else if (!req.body.nombres || !req.body.apellidos || !req.body.numId ||
+    !req.body.fechaNacimiento || !req.body.telefono || !req.body.correo ||
+    !req.body.ciudad || !req.body.tipoId
   ) {
     res.status(400).send({ error: 'Por favor verifique que todos los campos han sido dilegenciados correctamente' });
   } else if (await models.Paciente.findOne({
@@ -25,7 +28,8 @@ router.post('/', aeh(async (req, res) => {
       fechaNacimiento: req.body.fechaNacimiento,
       telefono: req.body.telefono,
       correo: req.body.correo,
-      constrasena: crypto.randomBytes(20).toString('hex'),
+      ciudad: req.body.ciudad,
+      contrasena: crypto.randomBytes(20).toString('hex'),
     });
     res.status(201).send({ status: 'OK' });
   }
