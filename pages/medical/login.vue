@@ -3,10 +3,14 @@
     <card class="login-card">
       <h3 slot="header" class="title text-center">Ingresar</h3>
       <form @submit.prevent="OnSumbit">
-        <div class="input-group">
-          <radio v-model="tipo" label="paciente">Paciente</radio>
-          <radio v-model="tipo" label="medico">Medico</radio>
-        </div>
+          <div class="form-check form-check-inline">
+            <input type="radio" v-model="tipo" value="paciente" id="paciente-radio" name="tipo" class="form-check-input" />
+            <label for="paciente-radio" class="form-check-label">Paciente</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input type="radio" v-model="tipo" value="medico" id="medico-radio" name="tipo" class="form-check-input"/>
+            <label for="medico-radio" class="form-check-label">Medico</label>
+          </div>
         <template v-if="tipo === 'paciente'">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
