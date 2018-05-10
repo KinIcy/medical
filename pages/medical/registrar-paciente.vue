@@ -127,8 +127,7 @@ export default {
   methods: {
     async OnSumbit() {
       try {
-        const token = 'Bearer  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZFBhY2llbnRlIjoiMSIsInRpcG9JZCI6IlBQIiwibnVtSWQiOiIwMDAwMDAwMCAgIiwibm9tYnJlcyI6IlBhY2llbnRlIiwiYXBlbGxpZG9zIjoiUHJ1ZWJhcyIsImZlY2hhTmFjaW1pZW50byI6IjIwMDAtMDItMDEiLCJlc3RhZG8iOiJhY3Rpdm8iLCJ0ZWxlZm9ubyI6IjU1NSA1NTUgNTU1IDUiLCJjb3JyZW8iOiJwcmV1YmFAcHJldWJhLmNvbSIsImNpdWRhZCI6IkNhbGkiLCJjcmVhdGVkQXQiOiIyMDE4LTA1LTA1VDIzOjM4OjA1LjE3OFoiLCJ1cGRhdGVkQXQiOiIyMDE4LTA1LTA3VDIzOjA1OjM5LjAwN1oiLCJzY29wZSI6WyJwYWNpZW50ZSJdLCJpYXQiOjE1MjU4NDU2NjF9.84LT2U85KkOqW6tEgGoTj0Y9hzxYgBkhHbYVt9r_6sk';
-        await this.$http.post('https://puj-medical.herokuapp.com/api/pacientes', {
+        const response = await this.$axios.post('https://puj-medical.herokuapp.com/api/pacientes', {
           data: {
             tipoId: this.tipo,
             numId: this.numId,
@@ -139,9 +138,8 @@ export default {
             ciudad: this.ciudad,
             direccion: this.direccion,
           },
-        }, { headers: { Autorization: token } }).then((data) => {
-          console.log(data);
         });
+        console.log(response);
         this.$router.replace({ path: '/medical/' });
       } catch (error) {
         const errorMessage = error.response ? error.response.data.error : error.message;
