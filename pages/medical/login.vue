@@ -101,11 +101,6 @@ export default {
 </script>
 
 <style>
-  body {
-    background: url(/img/background.jpg);
-    background-size: cover;
-    background-attachment: fixed;
-  }
 
   .login-card {
     max-width: 500px;
