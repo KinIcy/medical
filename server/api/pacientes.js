@@ -56,7 +56,7 @@ router.put('/:id', aeh(async (req, res) => {
       correo: req.body.correo,
       ciudad: req.body.ciudad,
     });
-    res.status.send({ status: 'OK' });
+    res.send({ status: 'OK' });
   }
 }));
 
