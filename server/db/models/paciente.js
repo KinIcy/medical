@@ -17,7 +17,7 @@ export default function (db) {
     estado: { type: Sequelize.ENUM('activo', 'inactivo'), allowNull: false, defaultValue: 'activo' },
     telefono: { type: Sequelize.STRING(13), allowNull: false },
     correo: { type: Sequelize.STRING(100), allowNull: false },
-    direccion: { type: Sequelize.STRING(60), default: '' },
+    direccion: { type: Sequelize.STRING(60), defaultValue: '' },
     ciudad: { type: Sequelize.STRING(20), allowNull: false },
   });
 
