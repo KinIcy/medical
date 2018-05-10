@@ -28,7 +28,6 @@ export default function (db) {
     const paciente = await Paciente.findOne({
       where: { idPaciente: pPaciente.idPaciente },
     });
-
     if (!paciente) {
       const error = new Error('No existe el paciente.');
       error.status = 404;
