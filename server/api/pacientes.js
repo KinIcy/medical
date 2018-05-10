@@ -61,7 +61,7 @@ router.put('/:id', aeh(async (req, res) => {
 }));
 
 router.get('/:id', aeh(async (req, res) => {
-  if (req.user.scope.indexOf('paciente') >= 0) {
+  if (req.user.scope.indexOf('paciente') >= 0 && req.user.idPaciente !== req.params.id) {   
     res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   } else {
     const paciente = await models.Paciente.findOne({
