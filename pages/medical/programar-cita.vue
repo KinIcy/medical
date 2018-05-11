@@ -52,23 +52,6 @@
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <input v-model="fechaCita" type="date" class="form-control" placeholder="Fecha">
-          </div>
-
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="horaCita" type="time" class="form-control" placeholder="Hora">
-          </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
             <select class="custom-select" v-model="medicoId">
               <option value="" selected>Médico</option>
               <option value="rb1">Ruben Dario</option>
@@ -85,12 +68,31 @@
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <textarea v-model="comentarioCita" class="form-control" placeholder="Comentario"></textarea>
-
+            <input v-model="fechaCita" type="date" class="form-control" placeholder="Fecha">
           </div>
 
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="horaCita" type="time" class="form-control" placeholder="Hora">
+          </div>
+
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <textarea v-model="comentarioCita" class="form-control textareaclass" placeholder="Comentario"></textarea>
+          </div>
+
+
+
         </template>
-        <button class="btn btn-primary btn-block" type="submit">Crear Paciente</button>
+        <button class="btn btn-primary btn-block" type="submit">Programar cita</button>
       </form>
     </card>
   </div>
@@ -156,4 +158,11 @@ export default {
     margin-left: auto;
     margin-right: auto;
   }
+
+  .textareaclass{
+  width:400px;
+  height:100px;
+  }
+
+
 </style>
