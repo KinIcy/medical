@@ -1,86 +1,83 @@
 <template>
-  <div>
-    <card class="login-card">
-      <h3 slot="header" class="title text-center">Registrar Médico</h3>
-      <form @submit.prevent="OnSumbit">
-        <template>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
+  <div class="content">
+    <div class="container-fluid">
+      <card class="registrar-medico-card">
+        <h3 slot="header" class="title text-center">Registrar Médico</h3>
+        <form @submit.prevent="OnSumbit">
+          <template>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-id-card"></i>
+                </span>
+              </div>
+              <input v-model="usuario" type="text" class="form-control" placeholder="Usuario">
             </div>
-            <select class="custom-select" v-model="tipoId">
-              <option value="" selected>Tipo de Identificación</option>
-              <option value="CC">Cedula de Ciudadanía</option>
-              <option value="TI">Tarjeta de Identidad</option>
-              <option value="PP">Pasaporte</option>
-              <option value="RC">Registro Civil</option>
-              <option value="CE">Cedula Extranjera</option>
-            </select>
-          </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
+
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-key"></i>
+                </span>
+              </div>
+              <input v-model="contrasena" type="password" class="form-control" placeholder="Contraseña" >
             </div>
-            <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion">
-          </div>
 
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-key"></i>
-              </span>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-key"></i>
+                </span>
+              </div>
+              <input v-model="confirmacion" type="password" class="form-control" placeholder="Confirmar contraseña" >
             </div>
-            <input v-model="contrasena" type="password" class="form-control" placeholder="Contraseña" >
-          </div>
 
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-id-card"></i>
+                </span>
+              </div>
+              <input v-model="nombres" type="text" class="form-control" placeholder="Nombres">
             </div>
-            <input v-model="nombres" type="text" class="form-control" placeholder="Nombres">
-          </div>
 
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-id-card"></i>
+                </span>
+              </div>
+              <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos">
             </div>
-            <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos">
-          </div>
 
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-id-card"></i>
+                </span>
+              </div>
+              <select class="custom-select" v-model="especialidad">
+                <option value="" selected>Especialidad</option>
+                <option value="GEN">Generál</option>
+                <option value="CAR">Cardiólogo</option>
+                <option value="PSI">Psicólogo</option>
+                <option value="NEU">Neumólogo</option>
+                <option value="URO">Urólogo</option>
+                <option value="CIR">Cirujano</option>
+              </select>
             </div>
-            <select class="custom-select" v-model="especialidad">
-              <option value="" selected>Especialidad</option>
-              <option value="GEN">Generál</option>
-              <option value="CAR">Cardiólogo</option>
-              <option value="PSI">Psicólogo</option>
-              <option value="NEU">Neumólogo</option>
-              <option value="URO">Urólogo</option>
-              <option value="CIR">Cirujano</option>
-            </select>
-          </div>
 
-          <div class="input-group">
-            <radio v-model="estado" label="activo">Activo</radio>
-            <radio v-model="estado" label="inactivo">Inactivo</radio>
-          </div>
+            <div class="input-group">
+              <radio v-model="estado" label="activo">Activo</radio>
+              <radio v-model="estado" label="inactivo">Inactivo</radio>
+            </div>
 
-        </template>
-        <button class="btn btn-primary btn-block" type="submit">Crear Médico</button>
-      </form>
-    </card>
+          </template>
+          <button class="btn btn-primary mr-2" type="submit">Crear Médico</button>
+          <button class="btn btn-secundary" @click="cancel">Cancelar</button>
+        </form>
+      </card>
+    </div>
   </div>
 </template>
 
@@ -93,22 +90,31 @@ export default {
   components: { Card, Radio },
   data() {
     return {
-      tipo: 'paciente',
-      tipoId: '',
-      numId: '',
       usuario: '',
       contrasena: '',
+      confirmacion: '',
+      nombres: '',
+      apellidos: '',
+      especialidad: '',
     };
   },
   methods: {
     async OnSumbit() {
       try {
-        await this.$auth.loginWith('local', {
-          data: {
-            tipo: this.tipo,
-            usuario: this.tipo === 'medico' ? this.usuario : `${this.tipoId}${this.numId}`,
-            contrasena: this.contrasena,
-          },
+        await this.$axios.$post('medicos/', {
+          usuario: this.usuario,
+          contrasena: this.contrasena,
+          confirmacion: this.confirmacion,
+          nombres: this.nombres,
+          apellidos: this.apellidos,
+          especialidad: this.especialidad,
+        });
+        this.$notify({
+          message: 'Médico Registrado',
+          icon: 'fa fa-check',
+          horizontalAlign: 'right',
+          verticalAlign: 'top',
+          type: 'success',
         });
         this.$router.replace({ path: '/medical/' });
       } catch (error) {
@@ -122,15 +128,17 @@ export default {
         });
       }
     },
+    cancel() {
+      // TODO: Implement me.
+    },
   },
 };
 </script>
 
 <style>
 
-  .login-card {
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+.registrar-medico-card {
+  max-width: 500px;
+  margin: 0 auto;
+}
 </style>
