@@ -30,6 +30,7 @@
 
       <content-footer />
     </div>
+    <notifications></notifications>
   </div>
 </template>
 <style lang="scss">
