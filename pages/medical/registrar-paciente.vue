@@ -1,90 +1,89 @@
 <template>
   <div class="content">
     <div class="container-fluid">
-      <card>
+      <card class="registrar-paciente-card">
         <h4 slot="header" class="card-title">Registrar Paciente</h4>
-        <form @submit.prevent="OnSumbit">
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <select class="custom-select" v-model="tipoId">
-              <option value="" selected>Tipo de Identificación</option>
-              <option value="CC">Cedula de Ciudadanía</option>
-              <option value="TI">Tarjeta de Identidad</option>
-              <option value="PP">Pasaporte</option>
-              <option value="RC">Registro Civil</option>
-              <option value="CE">Cedula Extranjera</option>
-            </select>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-id-card"></i>
+            </span>
           </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion">
+          <select class="custom-select" v-model="tipoId">
+            <option value="" selected>Tipo de Identificación</option>
+            <option value="CC">Cedula de Ciudadanía</option>
+            <option value="TI">Tarjeta de Identidad</option>
+            <option value="PP">Pasaporte</option>
+            <option value="RC">Registro Civil</option>
+            <option value="CE">Cedula Extranjera</option>
+          </select>
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-id-card"></i>
+            </span>
           </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-key"></i>
-              </span>
-            </div>
-            <input v-model="contrasena" type="password" class="form-control" placeholder="Contraseña" >
+          <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion">
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-id-card"></i>
+            </span>
           </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="nombres" type="text" class="form-control" placeholder="Nombres">
+          <input v-model="nombres" type="text" class="form-control" placeholder="Nombres">
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-id-card"></i>
+            </span>
           </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos">
+          <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos">
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-id-card"></i>
+            </span>
           </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="fechaNacimiento" type="date" class="form-control" placeholder="Fecha de Nacimeinto">
+          <input v-model="fechaNacimiento" type="date" class="form-control" placeholder="Fecha de Nacimeinto">
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-id-card"></i>
+            </span>
           </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="telefono" type="text" class="form-control" placeholder="Teléfono">
+          <input v-model="telefono" type="text" class="form-control" placeholder="Teléfono">
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-id-card"></i>
+            </span>
           </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="Ciudad" type="text" class="form-control" placeholder="Ciudad">
+          <input v-model="ciudad" type="text" class="form-control" placeholder="Ciudad">
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-id-card"></i>
+            </span>
           </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="direccion" type="text" class="form-control" placeholder="Dirección">
+          <input v-model="correo" type="email" class="form-control" placeholder="Correo Electrónico">
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-id-card"></i>
+            </span>
           </div>
-          <button class="btn btn-primary btn-block" type="submit">Crear Paciente</button>
-        </form>
+          <input v-model="direccion" type="text" class="form-control" placeholder="Dirección">
+        </div>
+        <button class="btn btn-primary mr-2" @click="OnSumbit">Crear Paciente</button>
+        <button class="btn btn-secundary" @click="cancel">Cancelar</button>
       </card>
     </div>
   </div>
@@ -92,14 +91,12 @@
 
 <script>
 import Card from '~/components/Cards/Card.vue';
-import Radio from '~/components/Inputs/Radio.vue';
 
 export default {
   layout: 'default',
-  components: { Card, Radio },
+  components: { Card },
   data() {
     return {
-      tipo: 'paciente',
       tipoId: '',
       numId: '',
       contrasena: '',
@@ -109,22 +106,29 @@ export default {
       telefono: '',
       ciudad: '',
       direccion: '',
+      correo: '',
     };
   },
   methods: {
     async OnSumbit() {
       try {
-        await this.$axios.post('https://puj-medical.herokuapp.com/api/pacientes', {
-          data: {
-            tipoId: this.tipo,
-            numId: this.numId,
-            contrasena: this.contrasena,
-            nombres: this.nombres,
-            apellidos: this.apellidos,
-            fechaNacimiento: this.fechaNacimiento,
-            ciudad: this.ciudad,
-            direccion: this.direccion,
-          },
+        await this.$axios.$post('pacientes/', {
+          tipoId: this.tipoId,
+          numId: this.numId,
+          nombres: this.nombres,
+          apellidos: this.apellidos,
+          fechaNacimiento: this.fechaNacimiento,
+          ciudad: this.ciudad,
+          telefono: this.telefono,
+          direccion: this.direccion,
+          correo: this.correo,
+        });
+        this.$notify({
+          message: 'Paciente Creado',
+          icon: 'fa fa-check',
+          horizontalAlign: 'right',
+          verticalAlign: 'top',
+          type: 'success',
         });
         this.$router.replace({ path: '/medical/' });
       } catch (error) {
@@ -138,6 +142,16 @@ export default {
         });
       }
     },
+    cancel() {
+      // TODO: Implement me.
+    },
   },
 };
 </script>
+
+<style>
+  .registrar-paciente-card {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+</style>
