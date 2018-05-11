@@ -3,87 +3,89 @@
     <div class="container-fluid">
       <card class="registrar-paciente-card">
         <h4 slot="header" class="card-title">Registrar Paciente</h4>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-id-card"></i>
-            </span>
+        <form @submit.prevent="OnSumbit">
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <select class="custom-select" v-model="tipoId">
+              <option value="" selected disabled>Tipo de Identificación</option>
+              <option value="CC">Cedula de Ciudadanía</option>
+              <option value="TI">Tarjeta de Identidad</option>
+              <option value="PP">Pasaporte</option>
+              <option value="RC">Registro Civil</option>
+              <option value="CE">Cedula Extranjera</option>
+            </select>
           </div>
-          <select class="custom-select" v-model="tipoId">
-            <option value="" selected>Tipo de Identificación</option>
-            <option value="CC">Cedula de Ciudadanía</option>
-            <option value="TI">Tarjeta de Identidad</option>
-            <option value="PP">Pasaporte</option>
-            <option value="RC">Registro Civil</option>
-            <option value="CE">Cedula Extranjera</option>
-          </select>
-        </div>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-id-card"></i>
-            </span>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion" required>
           </div>
-          <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion">
-        </div>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-id-card"></i>
-            </span>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="nombres" type="text" class="form-control" placeholder="Nombres" required>
           </div>
-          <input v-model="nombres" type="text" class="form-control" placeholder="Nombres">
-        </div>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-id-card"></i>
-            </span>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos" required>
           </div>
-          <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos">
-        </div>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-id-card"></i>
-            </span>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="fechaNacimiento" type="date" class="form-control" placeholder="Fecha de Nacimeinto" required>
           </div>
-          <input v-model="fechaNacimiento" type="date" class="form-control" placeholder="Fecha de Nacimeinto">
-        </div>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-id-card"></i>
-            </span>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="telefono" type="text" class="form-control" placeholder="Teléfono" required>
           </div>
-          <input v-model="telefono" type="text" class="form-control" placeholder="Teléfono">
-        </div>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-id-card"></i>
-            </span>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="ciudad" type="text" class="form-control" placeholder="Ciudad" required>
           </div>
-          <input v-model="ciudad" type="text" class="form-control" placeholder="Ciudad">
-        </div>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-id-card"></i>
-            </span>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="correo" type="email" class="form-control" placeholder="Correo Electrónico" required>
           </div>
-          <input v-model="correo" type="email" class="form-control" placeholder="Correo Electrónico">
-        </div>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-id-card"></i>
-            </span>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="direccion" type="text" class="form-control" placeholder="Dirección">
           </div>
-          <input v-model="direccion" type="text" class="form-control" placeholder="Dirección">
-        </div>
-        <button class="btn btn-primary mr-2" @click="OnSumbit">Crear Paciente</button>
-        <button class="btn btn-secundary" @click="cancel">Cancelar</button>
+          <button class="btn btn-primary mr-2" type="submit"> Paciente</button>
+          <button class="btn btn-secundary" @click="cancel">Cancelar</button>
+        </form>
       </card>
     </div>
   </div>
