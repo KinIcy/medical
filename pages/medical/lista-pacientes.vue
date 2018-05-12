@@ -3,45 +3,75 @@
     <div class="container-fluid">
       <card class="registrar-lista-pacientes-card">
         <h4 slot="header" class="card-title">Lista de pacientes</h4>
-        <form @submit.prevent="OnSumbit">
+        <form class="form-inline">
+            <div class="col-sm-4" >
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fa fa-id-card"></i>
+                  </span>
+                </div>
+                <select class="custom-select" v-model="tipoId">
+                  <option value="" selected disabled>Tipo de Identificación</option>
+                  <option value="CC">Cedula de Ciudadanía</option>
+                  <option value="TI">Tarjeta de Identidad</option>
+                  <option value="PP">Pasaporte</option>
+                  <option value="RC">Registro Civil</option>
+                  <option value="CE">Cedula Extranjera</option>
+                </select>
+              </div>
+            </div>
 
-          <input class="form-control" id="myInput" type="text" placeholder="Search..">
+            <div class="col-sm-4">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fa fa-id-card"></i>
+                  </span>
+                </div>
+                <input v-model="numId" type="text" class="form-control" placeholder="Número de identificación" required>
+              </div>
+            </div>
+          </form>
+            <div class="col-sm-4">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fa fa-id-card"></i>
+                  </span>
+                </div>
+                <input v-model="nombresApellidos" type="text" class="form-control" placeholder="Nombres o Apellidos" required>
+              </div>
+              <br>
+              <button class="btn btn-primary mr-2" @click.prevent="buscar">Buscar paciente</button>
+            </div>
+          <form>
+
+          </form>
           <br>
           <div class="table-responsive">
             <table class="table table-hover table-striped">
               <thead>
                 <tr>
-                  <th>Firstname</th>
-                  <th>Lastname</th>
+                  <th>Identificación</th>
+                  <th>Nombre</th>
+                  <th>Teléfono</th>
                   <th>Email</th>
                 </tr>
               </thead>
               <tbody id="myTable">
-                <tr>
-                  <td>John</td>
-                  <td>Doe</td>
-                  <td>john@example.com</td>
-                </tr>
-                <tr>
-                  <td>Mary</td>
-                  <td>Moe</td>
-                  <td>mary@mail.com</td>
-                </tr>
-                <tr>
-                  <td>July</td>
-                  <td>Dooley</td>
-                  <td>july@greatstuff.com</td>
-                </tr>
-                <tr>
-                  <td>Anja</td>
-                  <td>Ravendale</td>
-                  <td>a_r@test.com</td>
-                </tr>
+                <tr v-for="paciente in pacientes">
+                    <td style="display:none;">{{ paciente.id }}</td>
+                    <td>{{ paciente.tipoId + paciente.numId }}</td>
+                    <td>{{ paciente.nombres + ' ' + paciente.apellidos  }}</td>
+                    <td>{{ paciente.telefono }}</td>
+                    <td>{{ paciente.correo }}</td>
 
+                    <td><a @click.prevent="deshabilitarPaciente(paciente.id)"><i class="fa fa-trash-o text-navy"></i></a></td>
+                </tr>
               </tbody>
             </table>
           </div>
-        </form>
       </card>
     </div>
   </div>
@@ -55,22 +85,29 @@ export default {
   components: { Card },
   data() {
     return {
-      tipoId: '',
-      numId: '',
-      contrasena: '',
-      nombres: '',
-      apellidos: '',
-      fechaNacimiento: '',
-      telefono: '',
-      ciudad: '',
-      direccion: '',
-      correo: '',
+      pacientes: [{
+        id: '1', tipoId: 'PP', numId: '00000000', nombres: 'Valentin', apellidos: 'Fernandez', telefono: '098409361', correo: 'vafer@mail.com',
+      },
+      {
+        id: '2', tipoId: 'PP', numId: '11111111', nombres: 'Jason', apellidos: 'Lopez', telefono: '555555', correo: 'json@mail.com',
+      }],
+      buscarPorNombre: '',
+      model: {},
     };
   },
+  created() {
+    this.$axios.$get('pacientes/').then((response) => {
+      this.model = response.body;
+      console.log(response);
+    }).catch((response) => {
+      console.log(response);
+    });
+  },
   methods: {
-    search() {
-      console.log('Hola Mundo');
+    buscar() {
+      alert('Para JSON');
     },
+
   },
 };
 </script>
