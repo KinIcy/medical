@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" :class="{'nav-open':sidebarStore.showSidebar}">
     <side-bar>
       <mobile-menu slot="content"></mobile-menu>
       <sidebar-link to="/medical">
@@ -51,8 +51,8 @@
     },
     methods: {
       toggleSidebar() {
-        if (this.$sidebar.showSidebar) {
-          this.$sidebar.displaySidebar(false);
+        if (this.sidebarStore.showSidebar) {
+          this.sidebarStore.displaySidebar(false);
         }
       },
     },

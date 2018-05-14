@@ -37,8 +37,8 @@
     },
     methods: {
       hideSidebar() {
-        if (this.autoClose && this.$sidebar && this.$sidebar.showSidebar === true) {
-          this.$sidebar.displaySidebar(false);
+        if (this.autoClose && this.sidebarStore && this.sidebarStore.showSidebar === true) {
+          this.sidebarStore.displaySidebar(false);
         }
       },
     },
