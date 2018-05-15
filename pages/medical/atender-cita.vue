@@ -12,7 +12,7 @@
                   <i class="fa fa-id-card"></i>
                 </span>
               </div>
-              <input v-model="nombresApellidos" type="text" class="form-control" placeholder="Nombres o Apellidos" value=cita.nombre readonly>
+              <input v-model="nombresApellidos" type="text" class="form-control" placeholder="Nombres o Apellidos"  readonly>
             </div>
             <br>
           </div>
@@ -107,16 +107,16 @@ export default {
   layout: 'default',
   components: { Card },
   async asyncData({ app }) {
+    // const { cita } = await app.$axios.$get(`citas/${this.$route.query.citaId}`);
     const { cita } = await app.$axios.$get('citas/');
     return { cita };
   },
   data: () => ({
-    buscarPorNombre: '',
-    nombresApellidos: '',
+    nombresApellidos: 'pepe',
   }),
   methods: {
     obtenerHistorial() {
-      alert('Para JSON');
+      alert(this.$route.query.citaId);
     },
 
   },
