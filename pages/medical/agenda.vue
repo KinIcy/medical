@@ -15,7 +15,7 @@
                   <tr><th>&nbsp;</th></tr>
                 </thead>
                 <tbody>
-                  <tr v-for="hora in 15" :key="hora" style="height:100px"> 
+                  <tr v-for="hora in 15" :key="hora" style="height:100px">
                     <td class="text-right">{{hora + 6}}h</td>
                   </tr>
                 </tbody>
@@ -41,7 +41,7 @@
                                     no-caret>
                           <b-dropdown-item v-if="cita.estado !== 'disponible'">Ver</b-dropdown-item>
                           <b-dropdown-item v-if="cita.estado === 'disponible'">Reservar</b-dropdown-item>
-                          <b-dropdown-item v-if="cita.estado === 'reservada'">Atender</b-dropdown-item>
+                          <b-dropdown-item v-if="cita.estado === 'reservada'" @click="atenderCita">Atender</b-dropdown-item>
                           <b-dropdown-item v-if="cita.estado !== 'atendida' ">Cancelar</b-dropdown-item>
                         </b-dropdown>
                       </template>
@@ -194,6 +194,10 @@ export default {
         verticalAlign: 'top',
         type: 'success',
       });
+    },
+
+    atenderCita() {
+      this.$router.replace({ path: '/medical/atender-cita' });
     },
   },
 };
