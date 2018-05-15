@@ -37,9 +37,10 @@ module.exports = {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/auth',
+    '@nuxtjs/moment',
+    'bootstrap-vue/nuxt',
   ],
   css: [
-    'bootstrap/dist/css/bootstrap.css',
     'vue-notifyjs/themes/default.scss',
     '~/assets/sass/light-bootstrap-dashboard.scss',
     '~/static/css/nucleo-icons.css',

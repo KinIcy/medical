@@ -39,10 +39,14 @@ router.get('/', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') >= 0) {
     res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   } else {
+    const { numId, tipoId } = req.query;
     const pacientes = await models.Paciente.findAll({
-      attributes: ['tipoId', 'numId', 'nombres', 'estado'],
+      attributes: { exclude: ['contrasena'] },
+      where: numId && tipoId ? { numId, tipoId } : undefined,
     });
-    res.send({ pacientes: pacientes.filter(paciente => paciente.dataValues) });
+    if (!pacientes.length) {
+      res.status(404).send({ error: 'No se encontro pacientes con los parametros especificados' });
+    } else res.send({ pacientes: pacientes.filter(paciente => paciente.dataValues) });
   }
 }));
 

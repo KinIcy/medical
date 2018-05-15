@@ -1,8 +1,8 @@
 <template>
   <div class="content">
     <div class="container-fluid">
-      <card class="registrar-lista-pacientes-card">
-        <h4 slot="header" class="card-title">Lista de pacientes</h4>
+      <card>
+        <h4 slot="header" class="card-title">Pacientes</h4>
         <form class="form-inline">
             <div class="col-sm-4" >
               <div class="input-group mb-2">
@@ -60,13 +60,11 @@
                 </tr>
               </thead>
               <tbody id="myTable">
-                <tr v-for="paciente in pacientes">
-                    <td style="display:none;">{{ paciente.id }}</td>
-                    <td>{{ paciente.tipoId + paciente.numId }}</td>
-                    <td>{{ paciente.nombres + ' ' + paciente.apellidos  }}</td>
+                <tr v-for="paciente in pacientes" :key="`${paciente.tipoId}${paciente.numId}`">
+                    <td>{{ `${paciente.tipoId}${paciente.numId}`}}</td>
+                    <td>{{ `${paciente.nombres} ${paciente.apellidos}`}}</td>
                     <td>{{ paciente.telefono }}</td>
                     <td>{{ paciente.correo }}</td>
-
                     <td><a @click.prevent="deshabilitarPaciente(paciente.id)"><i class="fa fa-trash-o text-navy"></i></a></td>
                 </tr>
               </tbody>
@@ -83,26 +81,14 @@ import Card from '~/components/Cards/Card.vue';
 export default {
   layout: 'default',
   components: { Card },
-  data() {
-    return {
-      pacientes: [{
-        id: '1', tipoId: 'PP', numId: '00000000', nombres: 'Valentin', apellidos: 'Fernandez', telefono: '098409361', correo: 'vafer@mail.com',
-      },
-      {
-        id: '2', tipoId: 'PP', numId: '11111111', nombres: 'Jason', apellidos: 'Lopez', telefono: '555555', correo: 'json@mail.com',
-      }],
-      buscarPorNombre: '',
-      model: {},
-    };
+  async asyncData({ app }) {
+    const { pacientes } = await app.$axios.$get('pacientes/');
+    return { pacientes };
   },
-  created() {
-    this.$axios.$get('pacientes/').then((response) => {
-      this.model = response.body;
-      console.log(response);
-    }).catch((response) => {
-      console.log(response);
-    });
-  },
+  data: () => ({
+    buscarPorNombre: '',
+    nombresApellidos: '',
+  }),
   methods: {
     buscar() {
       alert('Para JSON');
@@ -113,7 +99,4 @@ export default {
 </script>
 
 <style>
-  .registrar-lista-pacientes-card {
-    margin: 0 auto;
-  }
 </style>

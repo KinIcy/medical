@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import { models } from '../db';
+import Sequelize from 'sequelize';
 import aeh from '../async-error-handler';
 
 const router = Router();
@@ -66,7 +67,7 @@ router.post('/horarios', aeh(async (req, res) => {
   const horaRegex = /^\d{2}:\d{2}$/;
   if (req.user.scope.indexOf('paciente') >= 0) {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
-  } else if (!dia.length || !horaInicio.length || !horaFin.length) {
+  } else if (!dia || !horaInicio || !horaFin) {
     res.status(400).send({ error: 'Por favor verifique que todos los campos han sido dilegenciados correctamente' });
   } else if (parseInt(dia, 10) < 1 || parseInt(dia, 10) > 7) {
     res.status(400).send({ error: 'Día invalido' });
@@ -81,7 +82,7 @@ router.post('/horarios', aeh(async (req, res) => {
 }));
 
 router.delete('/horarios/:id', aeh(async (req, res) => {
-  if (req.user.scope.indexOf('medico') < 0) {
+  if (req.user.scope.indexOf('paciente') >= 0) {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
   } else {
     await models.Horario.destroy({
@@ -130,10 +131,27 @@ router.get('/:id/agenda', aeh(async (req, res) => {
     }
   }
   disponibilidad = await models.Cita.findAll({
-    where: { idMedico: req.params.id, estado: 'disponible' },
+    where: {
+      idMedico: req.params.id,
+      estado: 'disponible',
+      fecha: { [Sequelize.Op.gte]: new Date() },
+    },
     attributes: ['fecha', 'hora'],
   });
   res.send({ disponibilidad: disponibilidad.map(horario => horario.dataValues) });
+}));
+
+router.post('/:id/agenda', aeh(async (req, res) => {
+  if (parseInt(req.params.id, 10) !== req.user.idMedico) {
+    res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
+  } else {
+    try {
+      await models.Cita.programarCitas(models, req.params.id);
+      res.send({ status: 'OK' });
+    } catch (error) {
+      res.status(error.status || 500).send({ error: error.message });
+    }
+  }
 }));
 
 export default router;

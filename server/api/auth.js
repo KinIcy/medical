@@ -47,7 +47,7 @@ router.post('/login', aeh(async (req, res) => {
 }));
 
 router.get('/user', (req, res) => {
-  res.json(req.user);
+  res.json({ user: req.user });
 });
 
 router.post('/logout', (req, res) => {

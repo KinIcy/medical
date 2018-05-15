@@ -56,25 +56,12 @@
                   <i class="fa fa-id-card"></i>
                 </span>
               </div>
-              <select class="custom-select" v-model="especialidad">
-                <option value="" selected>Especialidad</option>
-                <option value="GEN">Generál</option>
-                <option value="CAR">Cardiólogo</option>
-                <option value="PSI">Psicólogo</option>
-                <option value="NEU">Neumólogo</option>
-                <option value="URO">Urólogo</option>
-                <option value="CIR">Cirujano</option>
-              </select>
-            </div>
-
-            <div class="input-group">
-              <radio v-model="estado" label="activo">Activo</radio>
-              <radio v-model="estado" label="inactivo">Inactivo</radio>
+              <input v-model="especialidad" type="text" class="form-control" placeholder="Especialidad">
             </div>
 
           </template>
           <button class="btn btn-primary mr-2" type="submit">Crear Médico</button>
-          <button class="btn btn-secundary" @click="cancel">Cancelar</button>
+          <button class="btn btn-secundary" @click="cancel" type="button">Cancelar</button>
         </form>
       </card>
     </div>
@@ -129,7 +116,7 @@ export default {
       }
     },
     cancel() {
-      // TODO: Implement me.
+      this.$router.replace({ path: '/medical/' });
     },
   },
 };

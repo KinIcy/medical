@@ -83,8 +83,8 @@
             </div>
             <input v-model="direccion" type="text" class="form-control" placeholder="Dirección">
           </div>
-          <button class="btn btn-primary mr-2" type="submit"> Paciente</button>
-          <button class="btn btn-secundary" @click="cancel">Cancelar</button>
+          <button class="btn btn-primary mr-2" type="submit">Completar Registro</button>
+          <button class="btn btn-secundary" @click="cancel" type="button">Cancelar</button>
         </form>
       </card>
     </div>
@@ -145,7 +145,7 @@ export default {
       }
     },
     cancel() {
-      // TODO: Implement me.
+      this.$router.replace({ path: '/medical/pacientes' });
     },
   },
 };

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Sequelize from 'sequelize';
+import moment from 'moment';
 
 import { models } from '../db';
 import aeh from '../async-error-handler';
@@ -7,7 +8,7 @@ import aeh from '../async-error-handler';
 const router = Router();
 
 router.post('/', aeh(async (req, res) => {
-  if (!req.body.fecha.length || !req.body.hora.length || !req.body.idMedico.length) {
+  if (!req.body.fecha || !req.body.hora || !req.body.idMedico) {
     res.status(400).send({ error: 'Por favor diligenciar todos los campos obligatorios' });
   } else if (!(await models.Medico.findById(req.body.idMedico))) {
     res.status(400).send({ error: 'Medico invalido' });
@@ -40,7 +41,7 @@ router.post('/', aeh(async (req, res) => {
         }, {
           where: { idCita: cita.idCita },
         });
-        if (updateCount !== 2) {
+        if (!updateCount) {
           res.status(500).send({ error: 'Ocurrió un error al reservar la cita' });
         } else res.send({ status: 'OK' });
       }
@@ -61,22 +62,31 @@ router.get('/', aeh(async (req, res) => {
         attributes: ['nombres', 'apellidos'],
       },
     });
-  } else if (req.user.scope.indexOf('medico') >= 0) {
+  } else if (req.query.global === undefined) {
+    const fecha = moment();
+    fecha.year(req.query.ano);
+    fecha.week(req.query.semana);
+    fecha.day(1);
+    const inicio = fecha.toDate();
+    fecha.day(7);
+    const fin = fecha.toDate();
     citas = await models.Cita.findAll({
       where: {
         idMedico: req.user.idMedico,
-        estado: { [Sequelize.Op.ne]: 'disponible' },
+        fecha: {
+          [Sequelize.Op.and]: {
+            [Sequelize.Op.gte]: inicio,
+            [Sequelize.Op.lte]: fin,
+          },
+        },
       },
       include: {
         model: models.Paciente,
         attributes: ['nombres', 'apellidos'],
       },
     });
-  } else {
+  } else if (req.user.scope.indexOf('admin') >= 0) {
     citas = await models.Cita.findAll({
-      where: {
-        estado: { [Sequelize.Op.ne]: 'disponible' },
-      },
       include: [{
         model: models.Paciente,
         attributes: ['nombres', 'apellidos'],
@@ -85,8 +95,10 @@ router.get('/', aeh(async (req, res) => {
         attributes: ['nombres', 'apellidos'],
       }],
     });
+  } else {
+    res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   }
-  res.send({ citas: citas.map(cita => cita.dataValues) });
+  if (citas) res.send({ citas: citas.map(cita => cita.dataValues) });
 }));
 
 router.put('/:id', aeh(async (req, res) => {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <card class="login-card">
       <h3 slot="header" class="title text-center">Programar Cita</h3>
       <form @submit.prevent="OnSumbit">
@@ -10,8 +10,8 @@
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <select class="custom-select" v-model="tipoId">
-              <option value="" selected>Tipo de Identificación</option>
+            <select class="custom-select" v-model="tipoId" @change="buscarPaciente">
+              <option value="" disabled>Tipo de Identificación</option>
               <option value="CC">Cedula de Ciudadanía</option>
               <option value="TI">Tarjeta de Identidad</option>
               <option value="PP">Pasaporte</option>
@@ -25,80 +25,81 @@
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion">
+            <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion" @change="buscarPaciente">
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fas fa-user-alt"></i>
+                <i class="fa fa-user"></i>
               </span>
             </div>
-            <input v-model="nombres" type="text" class="form-control" placeholder="Nombres" disabled>
+            <input v-model="nombres" type="text" class="form-control" placeholder="Nombres" readonly>
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fas fa-user-alt"></i>
+                <i class="fa fa-user"></i>
               </span>
             </div>
-            <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos" disabled>
+            <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos" readonly>
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <select class="custom-select" v-model="medicoId">
-              <option value="" selected>Médico</option>
-              <option value="rb1">Ruben Dario</option>
-              <option value="pl1">Paloma Sambussi</option>
-              <option value="it1">Igniz Tussty</option>
-              <option value="lm1">Laura Mondoza</option>
-              <option value="cn1">Cirus Nirus</option>
+            <select class="custom-select" v-model="idMedico" @change="consultarDisponibilidad">
+              <option value="" disabled>Médico</option>
+              <option v-for="medico in medicos" :value="medico.idMedico" :key="medico.idMedico">
+                {{medico.nombres}} {{medico.apellidos}}
+              </option>
             </select>
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <input v-model="fechaCita" type="date" class="form-control" placeholder="Fecha">
+            <select class="custom-select" v-model="fecha">
+              <option value="" disabled>Fecha</option>
+              <option v-for="dia in Object.keys(agenda)" :value="dia" :key="dia">
+                {{formatearFecha(dia)}}
+              </option>
+            </select>
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <input v-model="horaCita" type="time" class="form-control" placeholder="Hora">
+            <select class="custom-select" v-model="hora">
+              <option value="" disabled>Hora</option>
+              <option v-for="horario in agenda[fecha]" :value="horario.hora" :key="horario.hora">
+                {{formatearHora(horario.hora)}}
+              </option>
+            </select>
           </div>
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <textarea v-model="comentarioCita" class="form-control textareaclass" placeholder="Comentario"></textarea>
+            <textarea v-model="comentario" class="form-control textareaclass" placeholder="Comentario"></textarea>
           </div>
-
-
-
         </template>
-        <button class="btn btn-primary btn-block" type="submit">Programar cita</button>
+        <button class="btn btn-primary  " type="submit">Programar cita</button>
       </form>
     </card>
   </div>
 </template>
 
 <script>
+import moment from 'moment';
+
 import Card from '~/components/Cards/Card.vue';
 import Radio from '~/components/Inputs/Radio.vue';
 
@@ -107,38 +108,45 @@ export default {
   components: { Card, Radio },
   data() {
     return {
-      tipo: 'paciente',
       tipoId: '',
       numId: '',
-      contrasena: '',
       nombres: '',
       apellidos: '',
-      fechaNacimiento: '',
-      telefono: '',
-      ciudad: '',
-      direccion: '',
+      comentario: '',
+      idMedico: '',
+      idPaciente: '',
+      medicos: [],
+      fecha: '',
+      hora: '',
+      agenda: {},
     };
   },
   methods: {
+    formatearHora(hora) {
+      return moment(hora, 'HH:mm:ss').format('HH:mm');
+    },
+    formatearFecha(fecha) {
+      return moment(fecha).format('D MMM');
+    },
     async OnSumbit() {
       try {
-        const response = await this.$axios.post('https://puj-medical.herokuapp.com/api/pacientes', {
-          data: {
-            tipoId: this.tipo,
-            numId: this.numId,
-            contrasena: this.contrasena,
-            nombres: this.nombres,
-            apellidos: this.apellidos,
-            fechaNacimiento: this.fechaNacimiento,
-            ciudad: this.ciudad,
-            direccion: this.direccion,
-          },
+        await this.$axios.$post('citas/', {
+          idMedico: this.idMedico,
+          idPaciente: this.idPaciente,
+          fecha: this.fecha,
+          hora: this.hora,
+          comentario: this.comentario,
         });
-        console.log(response);
-        this.$router.replace({ path: '/medical/' });
+        this.$notify({
+          message: 'Cita Reservada',
+          icon: 'fa fa-check',
+          horizontalAlign: 'right',
+          verticalAlign: 'top',
+          type: 'success',
+        });
+        this.$router.replace({ path: '/medical/agenda/' });
       } catch (error) {
         const errorMessage = error.response ? error.response.data.error : error.message;
-        console.log(errorMessage);
         this.$notify({
           message: `${errorMessage}`,
           icon: 'fa fa-times',
@@ -146,6 +154,43 @@ export default {
           verticalAlign: 'top',
           type: 'danger',
         });
+      }
+    },
+    async buscarPaciente() {
+      if (this.numId.length && this.tipoId.length) {
+        try {
+          const { pacientes } = await this.$axios.$get(`pacientes/?numId=${this.numId}&tipoId=${this.tipoId}`);
+          this.nombres = pacientes[0].nombres;
+          this.apellidos = pacientes[0].apellidos;
+          this.idPaciente = pacientes[0].idPaciente;
+          this.listarMedicos();
+        } catch (error) {
+          this.nombres = '';
+          this.apellidos = '';
+          const errorMessage = error.response ? error.response.data.error : error.message;
+          this.$notify({
+            message: `${errorMessage}`,
+            icon: 'fa fa-times',
+            horizontalAlign: 'right',
+            verticalAlign: 'top',
+            type: 'danger',
+          });
+        }
+      }
+    },
+    async listarMedicos() {
+      const { medicos } = await this.$axios.$get('medicos');
+      this.medicos = medicos;
+    },
+    async consultarDisponibilidad() {
+      if (this.idMedico !== '') {
+        const { disponibilidad } = await this.$axios.$get(`medicos/${this.idMedico}/agenda`);
+        const agenda = {};
+        disponibilidad.forEach((cita) => {
+          if (!agenda[cita.fecha]) agenda[cita.fecha] = [];
+          agenda[cita.fecha].push(cita);
+        });
+        this.agenda = agenda;
       }
     },
   },
@@ -160,7 +205,6 @@ export default {
   }
 
   .textareaclass{
-  width:400px;
   height:100px;
   }
 
