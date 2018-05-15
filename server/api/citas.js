@@ -102,7 +102,12 @@ router.get('/', aeh(async (req, res) => {
 }));
 
 router.get('/:id', aeh(async (req, res) => {
-  const cita = await models.Cita.findById(req.params.id);
+  const cita = await models.Cita.findById(req.params.id, {
+    include: [{
+      model: models.Paciente,
+      attributes: ['nombres', 'apellidos'],
+    }],
+  });
   if (!cita) {
     res.status(404).send({ error: 'No se encontra la cita' });
   } else if (req.user.scope.indexOf('admin') < 0 && req.user.idPaciente !== cita.idPaciente && req.user.idMedico !== cita.idMedico) {
