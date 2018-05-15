@@ -101,6 +101,17 @@ router.get('/', aeh(async (req, res) => {
   if (citas) res.send({ citas: citas.map(cita => cita.dataValues) });
 }));
 
+router.get('/:id', aeh(async (req, res) => {
+  const cita = await models.Cita.findById(req.params.id);
+  if (!cita) {
+    res.status(404).send({ error: 'No se encontra la cita' });
+  } else if (req.user.scope.indexOf('admin') < 0 && req.user.idPaciente !== cita.idPaciente && req.user.idMedico !== cita.idMedico) {
+    res.status(401).send({ error: 'No tienes permiso para ver este contenido' });
+  } else {
+    res.send({ cita });
+  }
+}));
+
 router.put('/:id', aeh(async (req, res) => {
   const { noAsistida, observaciones, formulacion } = req.body;
   if (req.user.scope.indexOf('paciente') >= 0) {
