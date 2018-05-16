@@ -105,7 +105,7 @@ router.get('/:id', aeh(async (req, res) => {
   const cita = await models.Cita.findById(req.params.id, {
     include: [{
       model: models.Paciente,
-      attributes: ['nombres', 'apellidos'],
+      attributes: ['nombres', 'apellidos', 'tipoId', 'numId'],
     }],
   });
   if (!cita) {
@@ -125,7 +125,7 @@ router.put('/:id', aeh(async (req, res) => {
     const cita = await models.Cita.findById(req.params.id);
     if (!cita) {
       res.status(404).send({ error: 'Cita no encontrada' });
-    } else if (cita.dataValues.estado !== 'reservado') {
+    } else if (cita.dataValues.estado !== 'reservada') {
       res.status(400).send({ error: 'No puedes alterar una cita con un estado diferente a reservada' });
     } else if (noAsistida) {
       const [updateCount] = await models.Cita.update({

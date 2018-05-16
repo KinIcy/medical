@@ -24,7 +24,7 @@
                   <i class="fa fa-id-card"></i>
                 </span>
               </div>
-              <input v-model="citaFechaHora" type="text" class="form-control" placeholder="Fecha y Hora" value=cita.fecha readonly>
+              <input v-model="citaFechaHora" type="text" class="form-control" placeholder="Fecha y Hora" readonly>
             </div>
             <br>
           </div>
@@ -38,7 +38,7 @@
                     <i class="fa fa-id-card"></i>
                   </span>
                 </div>
-                <select class="custom-select" v-model="tipoId" disabled="disabled" value=cita.tipoId>
+                <select class="custom-select" v-model="tipoId" disabled="disabled">
                   <option value="" selected disabled>Tipo de Identificación</option>
                   <option value="CC">Cedula de Ciudadanía</option>
                   <option value="TI">Tarjeta de Identidad</option>
@@ -56,7 +56,7 @@
                     <i class="fa fa-id-card"></i>
                   </span>
                 </div>
-                <input v-model="numId" type="text" class="form-control" placeholder="Número de identificación" value=cita.numId readonly>
+                <input v-model="numId" type="text" class="form-control" placeholder="Número de identificación" readonly>
               </div>
             </div>
           </form>
@@ -69,7 +69,7 @@
                   <i class="fa fa-id-card"></i>
                 </span>
               </div>
-              <textarea v-model="comentario" class="form-control textareaclass" placeholder="Comentario" value=cita.comentario readonly></textarea>
+              <textarea v-model="comentario" class="form-control textareaclass" placeholder="Comentario" readonly></textarea>
             </div>
             </div>
           </form>
@@ -87,9 +87,9 @@
                   <i class="fa fa-id-card"></i>
                 </span>
               </div>
-              <textarea v-model="comentario" class="form-control textareaclass" placeholder="Comentario"></textarea>
+              <textarea v-model="historiaMedica" class="form-control textareaclass2" placeholder="Comentario"></textarea>
             </div>
-            <button class="btn btn-primary mr-2"  @click="obtenerHistorial">Ver historial completo</button>
+            <button class="btn btn-primary mr-2"  @click="finalizarCita(queryParam)">Confirmar asistencia y finalizar cita</button>
           </div>
         </form>
       </card>
@@ -108,23 +108,59 @@ export default {
   components: { Card },
   async asyncData({ app, query }) {
     const { cita } = await app.$axios.$get(`citas/${query.citaId}`);
+    // const historiaMedica = await app.$axios.$get(`pacientes/${query.citaId}/historial`);
     const nombresApellidos = `${cita.paciente.nombres} ${cita.paciente.apellidos}`;
     const citaFechaHora = `${cita.fecha} - ${cita.hora.substring(0, cita.hora.length - 3)}`;
     const comentario = `${cita.comentario}`;
+    const tipoId = `${cita.paciente.tipoId}`;
+    const numId = `${cita.paciente.numId}`;
+    const queryParam = `${query.citaId}`;
     return {
-      cita,
       nombresApellidos,
       citaFechaHora,
       comentario,
+      tipoId,
+      numId,
+      queryParam,
+      // historiaMedica,
     };
   },
   data: () => ({
     nombresApellidos: '',
     citaFechaHora: '',
     comentario: '',
+    numId: '',
+    historiaMedica: '',
+    queryParam: '',
   }),
   methods: {
-    obtenerHistorial() {
+    async finalizarCita(queryParam) {
+      const { actualizarCita } = {
+        noAsistida: false,
+        comentario: '',
+        formulacion: '',
+        estado: 'reservada',
+      };
+      try {
+        await this.$axios.put(`citas/${queryParam}`, actualizarCita);
+        this.$router.replace({ path: '/medical/' });
+        this.$notify({
+          message: 'Cita atendida exitosamente',
+          icon: 'fa fa-check',
+          horizontalAlign: 'right',
+          verticalAlign: 'top',
+          type: 'success',
+        });
+      } catch (error) {
+        const errorMessage = error.response ? error.response.data.error : error.message;
+        this.$notify({
+          message: `${errorMessage}`,
+          icon: 'fa fa-times',
+          horizontalAlign: 'right',
+          verticalAlign: 'top',
+          type: 'danger',
+        });
+      }
     },
 
   },
@@ -135,5 +171,9 @@ export default {
 
   .textareaclass{
   height:100px;
+  }
+
+  .textareaclass2{
+  height:400px;
   }
 </style>
