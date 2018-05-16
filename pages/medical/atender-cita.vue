@@ -106,17 +106,25 @@ import Card from '~/components/Cards/Card.vue';
 export default {
   layout: 'default',
   components: { Card },
-  async asyncData({ app }) {
-    // const { cita } = await app.$axios.$get(`citas/${this.$route.query.citaId}`);
-    const { cita } = await app.$axios.$get('citas/');
-    return { cita };
+  async asyncData({ app, query }) {
+    const { cita } = await app.$axios.$get(`citas/${query.citaId}`);
+    const nombresApellidos = `${cita.paciente.nombres} ${cita.paciente.apellidos}`;
+    const citaFechaHora = `${cita.fecha} - ${cita.hora.substring(0, cita.hora.length - 3)}`;
+    const comentario = `${cita.comentario}`;
+    return {
+      cita,
+      nombresApellidos,
+      citaFechaHora,
+      comentario,
+    };
   },
   data: () => ({
-    nombresApellidos: 'pepe',
+    nombresApellidos: '',
+    citaFechaHora: '',
+    comentario: '',
   }),
   methods: {
     obtenerHistorial() {
-      alert(this.$route.query.citaId);
     },
 
   },
