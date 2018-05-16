@@ -108,7 +108,6 @@ export default {
   components: { Card },
   async asyncData({ app, query }) {
     const { cita } = await app.$axios.$get(`citas/${query.citaId}`);
-    // const historiaMedica = await app.$axios.$get(`pacientes/${query.citaId}/historial`);
     const nombresApellidos = `${cita.paciente.nombres} ${cita.paciente.apellidos}`;
     const citaFechaHora = `${cita.fecha} - ${cita.hora.substring(0, cita.hora.length - 3)}`;
     const comentario = `${cita.comentario}`;

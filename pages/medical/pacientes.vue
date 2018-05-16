@@ -65,7 +65,8 @@
                     <td>{{ `${paciente.nombres} ${paciente.apellidos}`}}</td>
                     <td>{{ paciente.telefono }}</td>
                     <td>{{ paciente.correo }}</td>
-                    <td><a @click.prevent="deshabilitarPaciente(paciente.id)"><i class="fa fa-trash-o text-navy"></i></a></td>
+                    <td><a @click.prevent="editarPaciente(paciente.idPaciente)"><i class="fa fa-edit"></i></a></td>
+                    <td><a @click.prevent="deshabilitarPaciente(paciente.idPaciente)"><i class="fa fa-times"></i></a></td>
                 </tr>
               </tbody>
             </table>
@@ -92,6 +93,9 @@ export default {
   methods: {
     buscar() {
       alert('Para JSON');
+    },
+    editarPaciente(pidPaciente) {
+      this.$router.replace({ path: '/medical/registrar-paciente', query: { idPaciente: pidPaciente } });
     },
 
   },
