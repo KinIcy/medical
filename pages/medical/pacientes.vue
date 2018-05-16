@@ -57,16 +57,20 @@
                   <th>Nombre</th>
                   <th>Teléfono</th>
                   <th>Email</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody id="myTable">
-                <tr v-for="paciente in pacientes" :key="`${paciente.tipoId}${paciente.numId}`">
+                <tr v-for="paciente in pacientes" :key="paciente.idPaciente">
                     <td>{{ `${paciente.tipoId}${paciente.numId}`}}</td>
                     <td>{{ `${paciente.nombres} ${paciente.apellidos}`}}</td>
                     <td>{{ paciente.telefono }}</td>
                     <td>{{ paciente.correo }}</td>
-                    <td><a @click.prevent="editarPaciente(paciente.idPaciente)"><i class="fa fa-edit"></i></a></td>
-                    <td><a @click.prevent="deshabilitarPaciente(paciente.idPaciente)"><i class="fa fa-times"></i></a></td>
+                    <td>
+                      <b-btn title="Ver" variant="secundary" size="sm" class="btn-simple" type="button" @click="verPaciente(paciente.idPaciente)"><i class="fa fa-eye"></i></b-btn>
+                      <b-btn title="Editar" variant="primary" size="sm" class="btn-simple" type="button" @click="editarPaciente(paciente.idPaciente)"><i class="fa fa-edit"></i></b-btn>
+                      <b-btn title="Deshabilitar" variant="danger" size="sm" class="btn-simple" type="button" @click="deshabilitarPaciente(paciente.idPaciente)"><i class="fa fa-trash"></i></b-btn>
+                    </td>
                 </tr>
               </tbody>
             </table>
@@ -89,6 +93,8 @@ export default {
   data: () => ({
     buscarPorNombre: '',
     nombresApellidos: '',
+    numId: '',
+    tipoId: '',
   }),
   methods: {
     buscar() {
