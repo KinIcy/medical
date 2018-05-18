@@ -163,9 +163,7 @@ router.delete('/:id', aeh(async (req, res) => {
     res.status(404).send({ error: 'Cita no encontrada' });
   } else if (req.user.scope.indexOf('paciente') >= 0 && cita.idPaciente !== req.user.idPaciente) {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción' });
-  } else if (cita.estado !== 'reservada') {
-    res.status(400).send({ error: 'No puedes cancelar una cita que no esté reservada, o ya esté cancelada o atendida' });
-  } else {
+  } else if (cita.estado === 'reservada') {
     const [updateCount] = await models.Cita.update({
       estado: 'cancelada',
     }, {
@@ -176,6 +174,15 @@ router.delete('/:id', aeh(async (req, res) => {
     } else {
       res.send({ status: 'OK' });
     }
+  } else if (cita.estado === 'disponible') {
+    const destrouCount = await models.Cita.destroy({
+      where: { idCita: req.params.id },
+    });
+    if (!destrouCount) {
+      res.status(500).send({ error: 'Ocurrio un error al eliminar la cita' });
+    } else res.send({ status: 'OK' });
+  } else {
+    res.status(400).send({ error: 'No puedes cancelar una cita que no esté reservada, o ya esté cancelada o atendida' });
   }
 }));
 

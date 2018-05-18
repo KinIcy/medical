@@ -117,13 +117,13 @@ export default {
   layout: 'default',
   components: { Card },
   async asyncData({ app, query }) {
-    const { cita } = await app.$axios.$get(`citas/${query.citaId}`);
+    const { cita } = await app.$axios.$get(`citas/${query.idCita}`);
     const nombresApellidos = `${cita.paciente.nombres} ${cita.paciente.apellidos}`;
     const citaFechaHora = `${cita.fecha} - ${cita.hora.substring(0, cita.hora.length - 3)}`;
     const comentario = `${cita.comentario}`;
     const tipoId = `${cita.paciente.tipoId}`;
     const numId = `${cita.paciente.numId}`;
-    const queryParam = `${query.citaId}`;
+    const queryParam = `${query.idCita}`;
     const { idPaciente } = cita;
     return {
       nombresApellidos,

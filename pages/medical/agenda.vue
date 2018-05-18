@@ -40,9 +40,11 @@
                                     class="d-block"
                                     no-caret>
                           <b-dropdown-item v-if="cita.estado !== 'disponible'">Ver</b-dropdown-item>
-                          <b-dropdown-item v-if="cita.estado === 'disponible'">Reservar</b-dropdown-item>
+                          <b-dropdown-item v-if="cita.estado === 'disponible'" @click="reservarCita(cita)">Reservar</b-dropdown-item>
                           <b-dropdown-item v-if="cita.estado === 'reservada'" @click="atenderCita(cita)">Atender</b-dropdown-item>
-                          <b-dropdown-item v-if="cita.estado !== 'atendida' ">Cancelar</b-dropdown-item>
+                          <b-dropdown-item v-if="cita.estado === 'reservada'" @click="marcarCitaNoAsistida(cita)">Marcar como no asistida</b-dropdown-item>
+                          <b-dropdown-item v-if="cita.estado === 'reservada'" @click="reprogramarCita(cita)">Reprogramar</b-dropdown-item>
+                          <b-dropdown-item v-if="esCancelable(cita)" @click="cancelarCita(cita)">Cancelar</b-dropdown-item>
                         </b-dropdown>
                       </template>
                       <span v-else></span>
@@ -195,9 +197,25 @@ export default {
         type: 'success',
       });
     },
-
+    esCancelable(cita) {
+      return cita.estado !== 'atendida' && cita.estado !== 'cancelada';
+    },
     atenderCita(cita) {
-      this.$router.replace({ path: '/medical/atender-cita', query: { citaId: cita.idCita } });
+      this.$router.replace({ path: '/medical/atender-cita', query: { idCita: cita.idCita } });
+    },
+    reservarCita(cita) {
+      this.$router.replace({ path: '/medical/programar-cita', query: { idCita: cita.idCita } });
+    },
+    async cancelarCita(cita) {
+      await this.$axios.$delete(`citas/${cita.idCita}`);
+      this.$notify({
+        message: 'Cita cancelada',
+        icon: 'fa fa-check',
+        horizontalAlign: 'right',
+        verticalAlign: 'top',
+        type: 'success',
+      });
+      this.actualizarAgenda();
     },
   },
 };
