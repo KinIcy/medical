@@ -2,15 +2,31 @@
   <div class="content">
     <div class="container-fluid">
       <card class="registrar-paciente-card">
-        <h4 slot="header" class="card-title">{{titleText}}</h4>
-        <form @submit.prevent="OnSumbit">
+        <h4 slot="header" class="card-title">{{modoEdicion ? 'Actualizar' : 'Registrar'}} Paciente</h4>
+        <form @submit.prevent="OnSubmit">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <select class="custom-select" v-model="tipoId" :disabled="disableVar">
+            <input v-model="nombres" type="text" class="form-control" placeholder="Nombres" :readonly="modoEdicion" required>
+          </div>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos" :readonly="modoEdicion" required>
+          </div>
+            <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-id-card"></i>
+              </span>
+            </div>
+            <select class="custom-select" v-model="tipoId" :disabled="modoEdicion">
               <option value="" selected disabled>Tipo de Identificación</option>
               <option value="CC">Cedula de Ciudadanía</option>
               <option value="TI">Tarjeta de Identidad</option>
@@ -25,7 +41,7 @@
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion" :disabled="disableVar" required>
+            <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion" :readonly="modoEdicion" required>
           </div>
           <div class="input-group mb-2">
             <div class="input-group-prepend">
@@ -33,23 +49,7 @@
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <input v-model="nombres" type="text" class="form-control" placeholder="Nombres" :disabled="disableVar" required>
-          </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos" :disabled="disableVar" required>
-          </div>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
-              </span>
-            </div>
-            <input v-model="fechaNacimiento" type="date" class="form-control" placeholder="Fecha de Nacimeinto" :disabled="disableVar" required>
+            <input v-model="fechaNacimiento" type="date" class="form-control" placeholder="Fecha de Nacimeinto" :readonly="modoEdicion" required>
           </div>
           <div class="input-group mb-2">
             <div class="input-group-prepend">
@@ -83,7 +83,7 @@
             </div>
             <input v-model="direccion" type="text" class="form-control" placeholder="Dirección">
           </div>
-          <button class="btn btn-primary mr-2" type="submit" type="button"> {{ submitText }} </button>
+          <button class="btn btn-primary mr-2" type="submit"> {{ modoEdicion ? 'Actualizar' : 'Registrar' }} Paciente</button>
           <button class="btn btn-secundary" @click="cancel" type="button">Cancelar</button>
         </form>
       </card>
@@ -94,88 +94,45 @@
 <script>
 import Card from '~/components/Cards/Card.vue';
 
+function defaultData() {
+  return {
+    tipoId: '',
+    numId: '',
+    contrasena: '',
+    nombres: '',
+    apellidos: '',
+    fechaNacimiento: '',
+    telefono: '',
+    ciudad: '',
+    direccion: '',
+    correo: '',
+    modoEdicion: false,
+  };
+}
+
 export default {
-  layout: 'default',
   components: { Card },
-  async asyncData({ app, query }) {
-    if (!query.idPaciente) {
-      const tipoId = '';
-      const numId = '';
-      const nombres = '';
-      const apellidos = '';
-      const fechaNacimiento = '';
-      const telefono = '';
-      const ciudad = '';
-      const direccion = '';
-      const correo = '';
-      const queryParam = '';
-      const disableVar = false;
-      const submitText = 'Registar paciente';
-      const titleText = 'Registar paciente';
-      return {
-        tipoId,
-        numId,
-        nombres,
-        apellidos,
-        fechaNacimiento,
-        telefono,
-        ciudad,
-        direccion,
-        correo,
-        queryParam,
-        disableVar,
-        submitText,
-        titleText,
-      };
+  async asyncData({ app, params }) {
+    let data = {};
+    if (params.id) {
+      try {
+        data = await app.$axios.$get(`pacientes/${params.id}`);
+        data.modoEdicion = true;
+        return data;
+      } catch (error) {
+        data.error = error.response ? error.response.data.error : error.message;
+      }
     }
-    const paciente = await app.$axios.$get(`pacientes/${query.idPaciente}`);
-    const tipoId = `${paciente.tipoId}`;
-    const numId = `${paciente.numId}`;
-    const nombres = `${paciente.nombres}`;
-    const apellidos = `${paciente.apellidos}`;
-    const fechaNacimiento = `${paciente.fechaNacimiento}`;
-    const telefono = `${paciente.telefono}`;
-    const ciudad = `${paciente.ciudad}`;
-    const direccion = `${paciente.direccion}`;
-    const correo = `${paciente.correo}`;
-    const queryParam = `${query.idPaciente}`;
-    const disableVar = true;
-    const submitText = 'Actualizar paciente';
-    const titleText = 'Actualizar paciente';
-    return {
-      tipoId,
-      numId,
-      nombres,
-      apellidos,
-      fechaNacimiento,
-      telefono,
-      ciudad,
-      direccion,
-      correo,
-      queryParam,
-      disableVar,
-      submitText,
-      titleText,
-    };
+    return defaultData();
   },
-  data() {
-    return {
-      tipoId: '',
-      numId: '',
-      contrasena: '',
-      nombres: '',
-      apellidos: '',
-      fechaNacimiento: '',
-      telefono: '',
-      ciudad: '',
-      direccion: '',
-      correo: '',
-      disableVar: '',
-      titleText: '',
-    };
-  },
+  data: () => defaultData(),
   methods: {
-    async OnSumbit() {
+    OnSubmit() {
+      if (this.modoEdicion) {
+        this.editarPaciente();
+      } else this.registrarPaciente();
+    },
+    async registrarPaciente() {
       try {
         await this.$axios.$post('pacientes/', {
           tipoId: this.tipoId,
@@ -196,6 +153,33 @@ export default {
           type: 'success',
         });
         this.$router.replace({ path: '/medical/' });
+      } catch (error) {
+        const errorMessage = error.response ? error.response.data.error : error.message;
+        this.$notify({
+          message: `${errorMessage}`,
+          icon: 'fa fa-times',
+          horizontalAlign: 'right',
+          verticalAlign: 'top',
+          type: 'danger',
+        });
+      }
+    },
+    async editarPaciente() {
+      try {
+        await this.$axios.$put(`pacientes/${this.idPaciente}`, {
+          ciudad: this.ciudad,
+          telefono: this.telefono,
+          direccion: this.direccion,
+          correo: this.correo,
+        });
+        this.$notify({
+          message: 'Paciente Actualizado',
+          icon: 'fa fa-check',
+          horizontalAlign: 'right',
+          verticalAlign: 'top',
+          type: 'success',
+        });
+        this.$router.replace({ path: '/medical/pacientes' });
       } catch (error) {
         const errorMessage = error.response ? error.response.data.error : error.message;
         this.$notify({

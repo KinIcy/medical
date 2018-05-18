@@ -54,13 +54,18 @@ router.put('/:id', aeh(async (req, res) => {
   if (req.user.scope.indexOf('paciente') >= 0 && (req.user.idPaciente !== req.params.id)) {
     res.status(401).send({ error: 'No tienes permisos para realizar esta acción.' });
   } else {
-    await models.Paciente.editarPaciente({
-      idPaciente: req.body.idPaciente,
-      telefono: req.body.telefono,
-      correo: req.body.correo,
-      ciudad: req.body.ciudad,
-    });
-    res.send({ status: 'OK' });
+    try {
+      await models.Paciente.editarPaciente({
+        idPaciente: req.params.id,
+        telefono: req.body.telefono,
+        correo: req.body.correo,
+        direccion: req.body.direccion,
+        ciudad: req.body.ciudad,
+      });
+      res.send({ status: 'OK' });
+    } catch (error) {
+      res.status(error.status || 500).send({ error: error.message });
+    }
   }
 }));
 

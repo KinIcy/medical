@@ -100,8 +100,8 @@ export default {
     buscar() {
       alert('Para JSON');
     },
-    editarPaciente(pidPaciente) {
-      this.$router.replace({ path: '/medical/registrar-paciente', query: { idPaciente: pidPaciente } });
+    editarPaciente(idPaciente) {
+      this.$router.replace({ path: `/medical/registrar-paciente/${idPaciente}` });
     },
 
   },

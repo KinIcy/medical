@@ -38,6 +38,7 @@ export default function (db) {
         telefono: pPaciente.telefono,
         correo: pPaciente.correo,
         ciudad: pPaciente.ciudad,
+        direccion: pPaciente.direccion,
       }, {
         where: { idPaciente: pPaciente.idPaciente },
       });
