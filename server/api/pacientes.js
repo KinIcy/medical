@@ -83,33 +83,19 @@ router.get('/:id', aeh(async (req, res) => {
   }
 }));
 
-router.get('/historial', aeh(async (req, res) => {
-  if (req.user.scope.indexOf('paciente') < 0) {
-    res.status(401).send({ error: 'Es necesario iniciar sesión como paciente' });
-  } else {
-    const citas = await models.Cita.findAll({
-      where: { idPaciente: req.user.idPaciente, estado: 'atendida' },
-    });
-    res.send({ citas: citas.filter(cita => cita.dataValues) });
-  }
-}));
-
 router.get('/:id/historial', aeh(async (req, res) => {
-  if (req.user.scope.indexOf('paciente') >= 0) {
+  if (req.user.scope.indexOf('paciente') >= 0 && req.user.idPaciente !== req.params.id) {
     res.status(401).send({ error: 'No tienes permisos para ver este contenido' });
   } else {
-    const { idPaciente } = await models.Paciente.findOne({
-      where: { tipoId: req.params.id.substring(0, 2), numId: req.params.id.substring(2) },
-      attributes: ['idPaciente'],
+    const citas = await models.Cita.findAll({
+      where: { idPaciente: req.params.id, estado: 'atendida' },
+      include: {
+        model: models.Medico,
+        attributes: ['nombres', 'apellidos'],
+      },
+      attributes: ['fecha', 'observaciones', 'formulacion'],
     });
-    if (idPaciente === undefined) {
-      res.status(404).send({ error: 'Paciente no encontrado' });
-    } else {
-      const citas = await models.Cita.findAll({
-        where: { idPaciente, estado: 'atendida' },
-      });
-      res.send({ citas: citas.filter(cita => cita.dataValues) });
-    }
+    res.send({ citas });
   }
 }));
 
