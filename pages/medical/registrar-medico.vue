@@ -35,7 +35,7 @@
             <div class="input-group mb-2">
               <div class="input-group-prepend">
                 <span class="input-group-text">
-                  <i class="fa fa-id-card"></i>
+                  <i class="fa fa-user"></i>
                 </span>
               </div>
               <input v-model="nombres" type="text" class="form-control" placeholder="Nombres">
@@ -44,7 +44,7 @@
             <div class="input-group mb-2">
               <div class="input-group-prepend">
                 <span class="input-group-text">
-                  <i class="fa fa-id-card"></i>
+                  <i class="fa fa-user"></i>
                 </span>
               </div>
               <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos">

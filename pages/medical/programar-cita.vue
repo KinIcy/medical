@@ -59,7 +59,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-calendar-alt"></i>
               </span>
             </div>
             <select class="custom-select" v-model="fecha">
@@ -72,7 +72,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-clock"></i>
               </span>
             </div>
             <select class="custom-select" v-model="hora">

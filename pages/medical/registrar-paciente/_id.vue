@@ -7,7 +7,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-user"></i>
               </span>
             </div>
             <input v-model="nombres" type="text" class="form-control" placeholder="Nombres" :readonly="modoEdicion" required>
@@ -15,7 +15,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-user"></i>
               </span>
             </div>
             <input v-model="apellidos" type="text" class="form-control" placeholder="Apellidos" :readonly="modoEdicion" required>
@@ -46,7 +46,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-calendar-alt"></i>
               </span>
             </div>
             <input v-model="fechaNacimiento" type="date" class="form-control" placeholder="Fecha de Nacimeinto" :readonly="modoEdicion" required>
@@ -54,7 +54,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-phone"></i>
               </span>
             </div>
             <input v-model="telefono" type="text" class="form-control" placeholder="Teléfono" required>
@@ -62,7 +62,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-home"></i>
               </span>
             </div>
             <input v-model="ciudad" type="text" class="form-control" placeholder="Ciudad" required>
@@ -70,7 +70,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-envelope"></i>
               </span>
             </div>
             <input v-model="correo" type="email" class="form-control" placeholder="Correo Electrónico" required>
@@ -78,7 +78,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-home"></i>
               </span>
             </div>
             <input v-model="direccion" type="text" class="form-control" placeholder="Dirección">

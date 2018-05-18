@@ -18,6 +18,10 @@
         <i class="nc-icon nc-notes"></i>
         <p>Pacientes</p>
       </sidebar-link>
+      <sidebar-link to="/medical/medicos">
+        <i class="nc-icon nc-notes"></i>
+        <p>Médicos</p>
+      </sidebar-link>
       <sidebar-link to="/medical/registrar-medico">
         <i class="nc-icon nc-notes"></i>
         <p>Registrar Médico</p>

@@ -33,7 +33,7 @@ router.post('/', aeh(async (req, res) => {
 
 router.get('/', aeh(async (req, res) => {
   let medicos;
-  const attributes = ['idMedico', 'nombres', 'apellidos'];
+  const attributes = ['idMedico', 'nombres', 'apellidos', 'usuario', 'especialidad'];
 
   if (req.user.scope.indexOf('paciente') < 0) {
     medicos = await models.Medico.findAll({ attributes });
