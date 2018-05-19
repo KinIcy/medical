@@ -49,7 +49,7 @@
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <select class="custom-select" v-model="idMedico" @change="consultarDisponibilidad">
+            <select class="custom-select" v-model="idMedico" @change="consultarDisponibilidad" :disabled="modoCita">
               <option value="" disabled>Médico</option>
               <option v-for="medico in medicos" :value="medico.idMedico" :key="medico.idMedico">
                 {{medico.nombres}} {{medico.apellidos}}
@@ -62,7 +62,7 @@
                 <i class="fa fa-calendar-alt"></i>
               </span>
             </div>
-            <select class="custom-select" v-model="fecha">
+            <select class="custom-select" v-model="fecha" :disabled="modoCita">
               <option value="" disabled>Fecha</option>
               <option v-for="dia in Object.keys(agenda)" :value="dia" :key="dia">
                 {{formatearFecha(dia)}}
@@ -75,7 +75,7 @@
                 <i class="fa fa-clock"></i>
               </span>
             </div>
-            <select class="custom-select" v-model="hora">
+            <select class="custom-select" v-model="hora" :disabled="modoCita">
               <option value="" disabled>Hora</option>
               <option v-for="horario in agenda[fecha]" :value="horario.hora" :key="horario.hora">
                 {{formatearHora(horario.hora)}}
@@ -103,24 +103,49 @@ import moment from 'moment';
 import Card from '~/components/Cards/Card.vue';
 import Radio from '~/components/Inputs/Radio.vue';
 
+function defaultData() {
+  return {
+    tipoId: '',
+    numId: '',
+    nombres: '',
+    apellidos: '',
+    comentario: '',
+    idMedico: '',
+    idPaciente: '',
+    medicos: [],
+    fecha: '',
+    hora: '',
+    agenda: {},
+    modoCita: false,
+  };
+}
+
 export default {
   layout: 'default',
   components: { Card, Radio },
-  data() {
-    return {
-      tipoId: '',
-      numId: '',
-      nombres: '',
-      apellidos: '',
-      comentario: '',
-      idMedico: '',
-      idPaciente: '',
-      medicos: [],
-      fecha: '',
-      hora: '',
-      agenda: {},
-    };
+  async asyncData({ app, query }) {
+    const data = {};
+    if (query.idCita) {
+      try {
+        const { cita } = await app.$axios.$get(`citas/${query.idCita}`);
+        const { idMedico } = cita;
+        const { fecha } = cita;
+        const { hora } = cita;
+        data.modoCita = true;
+        data.idMedico = idMedico;
+        data.agenda = {};
+        data.agenda[cita.fecha] = [];
+        data.agenda[cita.fecha].push(cita);
+        data.fecha = fecha;
+        data.hora = hora;
+        return data;
+      } catch (error) {
+        data.error = error.response ? error.response.data.error : error.message;
+      }
+    }
+    return defaultData();
   },
+  data: () => defaultData(),
   methods: {
     formatearHora(hora) {
       return moment(hora, 'HH:mm:ss').format('HH:mm');
