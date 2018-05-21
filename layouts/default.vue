@@ -3,32 +3,32 @@
     <side-bar>
       <mobile-menu slot="content"></mobile-menu>
       <sidebar-link to="/medical/agenda" v-if="!esPaciente">
-        <i class="nc-icon nc-circle-09"></i>
+        <i class="far fa-calendar"></i>
         <p>Agenda</p>
       </sidebar-link>
-      <sidebar-link to="/medical/registrar-paciente" v-if="!esPaciente">
-        <i class="nc-icon nc-notes"></i>
-        <p>Registrar Paciente</p>
-      </sidebar-link>
       <sidebar-link to="/medical/pacientes" v-if="!esPaciente">
-        <i class="nc-icon nc-notes"></i>
+        <i class="fa fa-users "></i>
         <p>Pacientes</p>
       </sidebar-link>
       <sidebar-link to="/medical/medicos" v-if="esAdmin">
-        <i class="nc-icon nc-notes"></i>
+        <i class="fas fa-user-md"></i>
         <p>Médicos</p>
       </sidebar-link>
       <sidebar-link to="/medical/citas" v-if="!esAdmin">
-        <i class="nc-icon nc-notes"></i>
+        <i class="far fa-calendar"></i>
         <p>Citas</p>
       </sidebar-link>
       <sidebar-link to="/medical/registrar-medico"  v-if="esAdmin">
-        <i class="nc-icon nc-notes"></i>
+        <i class="fa fa-user-plus"></i>  
         <p>Registrar Médico</p>
       </sidebar-link>
       <sidebar-link to="/medical/programar-cita">
-        <i class="nc-icon nc-paper-2"></i>
+        <i class="far fa-calendar-check"></i>
         <p>Programar Cita</p>
+      </sidebar-link>
+      <sidebar-link to="/medical/registrar-paciente" v-if="!esPaciente">
+        <i class="fa fa-user-plus"></i>
+        <p>Registrar Paciente</p>
       </sidebar-link>
     </side-bar>
     <div class="main-panel">
