@@ -112,6 +112,9 @@ function defaultData() {
 
 export default {
   components: { Card },
+  head: {
+    title: 'Registrar Paciente ~ Medical',
+  },
   async asyncData({ app, params }) {
     let data = {};
     if (params.id) {

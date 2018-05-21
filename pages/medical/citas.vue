@@ -2,7 +2,7 @@
   <div class="content">
     <div class="container-fluid">
       <card>
-        <h4 slot="header" class="card-title">Médicos</h4>
+        <h4 slot="header" class="card-title">Citas</h4>
           <div class="col-sm-4">
             <div class="input-group mb-2">
               <div class="input-group-prepend">
@@ -61,7 +61,7 @@ import Card from '~/components/Cards/Card.vue';
 
 export default {
   head: {
-    title: 'Medicos ~ Medical',
+    title: 'Citas ~ Medical',
   },
   components: { Card },
   async asyncData({ app }) {
@@ -73,9 +73,6 @@ export default {
     nombresApellidos: '',
   }),
   methods: {
-    buscar() {
-      alert('Para JSON');
-    },
     editarMedico(idMedico) {
       this.$router.replace({ path: `/medical/registrar-medico/${idMedico}` });
     },

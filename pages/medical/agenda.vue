@@ -106,6 +106,10 @@ export default {
   data: () => ({
     dias: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
   }),
+  middleware: ['solomedicos'],
+  head: {
+    title: 'Agenda ~ Medical',
+  },
   async asyncData({ app }) {
     const semana = moment().week();
     const ano = moment().year();

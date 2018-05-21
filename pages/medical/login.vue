@@ -64,6 +64,9 @@ import Radio from '~/components/Inputs/Radio.vue';
 
 export default {
   layout: 'simple',
+  head: {
+    title: 'Iniciar Sesión ~ Medical',
+  },
   components: { Card, Radio },
   data() {
     return {
@@ -74,6 +77,7 @@ export default {
       contrasena: '',
     };
   },
+  auth: false,
   methods: {
     async OnSumbit() {
       try {

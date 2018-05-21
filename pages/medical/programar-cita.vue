@@ -121,7 +121,9 @@ function defaultData() {
 }
 
 export default {
-  layout: 'default',
+  head: {
+    title: 'Programar Cita ~ Medical',
+  },
   components: { Card, Radio },
   async asyncData({ app, query }) {
     const data = {};

@@ -84,7 +84,9 @@
 import Card from '~/components/Cards/Card.vue';
 
 export default {
-  layout: 'default',
+  head: {
+    title: 'Pacientes ~ Medical',
+  },
   components: { Card },
   async asyncData({ app }) {
     const { pacientes } = await app.$axios.$get('pacientes/');

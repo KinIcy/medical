@@ -114,7 +114,9 @@ import Card from '~/components/Cards/Card.vue';
 import moment from 'moment';
 
 export default {
-  layout: 'default',
+  head: {
+    title: 'Atender Cita ~ Medical',
+  },
   components: { Card },
   async asyncData({ app, query }) {
     const { cita } = await app.$axios.$get(`citas/${query.idCita}`);

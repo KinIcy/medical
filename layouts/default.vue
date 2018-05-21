@@ -2,27 +2,27 @@
   <div class="wrapper" :class="{'nav-open':sidebarStore.showSidebar}">
     <side-bar>
       <mobile-menu slot="content"></mobile-menu>
-      <sidebar-link to="/medical">
-        <i class="nc-icon nc-chart-pie-35"></i>
-        <p>Inico</p>
-      </sidebar-link>
-      <sidebar-link to="/medical/agenda">
+      <sidebar-link to="/medical/agenda" v-if="!esPaciente">
         <i class="nc-icon nc-circle-09"></i>
         <p>Agenda</p>
       </sidebar-link>
-      <sidebar-link to="/medical/registrar-paciente">
+      <sidebar-link to="/medical/registrar-paciente" v-if="!esPaciente">
         <i class="nc-icon nc-notes"></i>
         <p>Registrar Paciente</p>
       </sidebar-link>
-      <sidebar-link to="/medical/pacientes">
+      <sidebar-link to="/medical/pacientes" v-if="!esPaciente">
         <i class="nc-icon nc-notes"></i>
         <p>Pacientes</p>
       </sidebar-link>
-      <sidebar-link to="/medical/medicos">
+      <sidebar-link to="/medical/medicos" v-if="esAdmin">
         <i class="nc-icon nc-notes"></i>
         <p>Médicos</p>
       </sidebar-link>
-      <sidebar-link to="/medical/registrar-medico">
+      <sidebar-link to="/medical/citas" v-if="!esAdmin">
+        <i class="nc-icon nc-notes"></i>
+        <p>Citas</p>
+      </sidebar-link>
+      <sidebar-link to="/medical/registrar-medico"  v-if="esAdmin">
         <i class="nc-icon nc-notes"></i>
         <p>Registrar Médico</p>
       </sidebar-link>
@@ -42,7 +42,9 @@
   </div>
 </template>
 <style lang="scss">
-
+  body {
+    background-image: none;
+  }
 </style>
 <script>
   import TopNavbar from '~/components/TopNavbar.vue';
@@ -56,6 +58,13 @@
       ContentFooter,
       DashboardContent,
       MobileMenu,
+    },
+    data() {
+      return {
+        esMedico: this.$auth.user.scope.indexOf('medico') >= 0,
+        esPaciente: this.$auth.user.scope.indexOf('paciente') >= 0,
+        esAdmin: this.$auth.user.scope.indexOf('admin') >= 0,
+      };
     },
     methods: {
       toggleSidebar() {

@@ -73,7 +73,9 @@ import Card from '~/components/Cards/Card.vue';
 import Radio from '~/components/Inputs/Radio.vue';
 
 export default {
-  layout: 'default',
+  head: {
+    title: 'Registrar Medico ~ Medical',
+  },
   components: { Card, Radio },
   data() {
     return {

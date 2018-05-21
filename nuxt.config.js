@@ -62,9 +62,16 @@ module.exports = {
         },
       },
     },
+    redirect: {
+      login: '/medical/login',
+      logout: '/medical/login',
+    },
   },
   // Axios global configuration
   axios: {
     baseURL: process.env.API_URL || 'http://localhost:3000/api/',
+  },
+  router: {
+    middleware: ['auth'],
   },
 };
