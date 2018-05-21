@@ -4,7 +4,13 @@
       <card>
         <h4 slot="header" class="card-title">Agenda</h4>
         <h4 class="h4 text-center my-auto clearfix">
+          <b-btn class="btn-simple" variant="primary" type="button" @click="cambiarSemana(semana - 1)" v-show="semana > 1">
+            <i class="fa fa-chevron-left"></i>
+          </b-btn>
           Semana {{semana}} del {{ano}}
+          <b-btn class="btn-simple" variant="primary" type="button" @click="cambiarSemana(semana + 1)" v-show="semana < 52">
+            <i class="fa fa-chevron-right"></i>
+          </b-btn>
           <b-button v-b-modal.disponibilidad-modal variant="success" class="btn-fill float-md-right">Ver Disponibilidad</b-button>
         </h4>
         <div class="container-fluid">
@@ -132,6 +138,10 @@ export default {
     Card,
   },
   methods: {
+    cambiarSemana(semana) {
+      this.semana = semana;
+      this.actualizarAgenda();
+    },
     estiloCita(cita) {
       const estilos = {
         disponible: 'success',
