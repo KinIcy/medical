@@ -62,7 +62,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-home"></i>
+                <i class="fa fa-building"></i>
               </span>
             </div>
             <input v-model="ciudad" type="text" class="form-control" placeholder="Ciudad" required>

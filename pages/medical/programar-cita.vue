@@ -10,7 +10,7 @@
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <select class="custom-select" v-model="tipoId" @change="buscarPaciente">
+            <select class="custom-select" v-model="tipoId" @change="buscarPaciente" :disabled="esPaciente">
               <option value="" disabled>Tipo de Identificación</option>
               <option value="CC">Cedula de Ciudadanía</option>
               <option value="TI">Tarjeta de Identidad</option>
@@ -25,7 +25,7 @@
                 <i class="fa fa-id-card"></i>
               </span>
             </div>
-            <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion" @change="buscarPaciente">
+            <input v-model="numId" type="text" class="form-control" placeholder="Numero de Identificacion" @change="buscarPaciente" :disabled="esPaciente">
           </div>
           <div class="input-group mb-2">
             <div class="input-group-prepend">
@@ -46,7 +46,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="fa fa-stethoscope"></i>
               </span>
             </div>
             <select class="custom-select" v-model="idMedico" @change="consultarDisponibilidad" :disabled="modoCita">
@@ -59,7 +59,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-calendar-alt"></i>
+                <i class="fa fa-calendar"></i>
               </span>
             </div>
             <select class="custom-select" v-model="fecha" :disabled="modoCita">
@@ -85,7 +85,7 @@
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fa fa-id-card"></i>
+                <i class="far fa-comment"></i>
               </span>
             </div>
             <textarea v-model="comentario" class="form-control textareaclass" placeholder="Comentario"></textarea>
@@ -101,7 +101,6 @@
 import moment from 'moment';
 
 import Card from '~/components/Cards/Card.vue';
-import Radio from '~/components/Inputs/Radio.vue';
 
 function defaultData() {
   return {
@@ -124,9 +123,9 @@ export default {
   head: {
     title: 'Programar Cita ~ Medical',
   },
-  components: { Card, Radio },
+  components: { Card },
   async asyncData({ app, query }) {
-    const data = {};
+    const data = defaultData();
     if (query.idCita) {
       try {
         const { cita } = await app.$axios.$get(`citas/${query.idCita}`);
@@ -144,10 +143,21 @@ export default {
       } catch (error) {
         data.error = error.response ? error.response.data.error : error.message;
       }
-    }
+    } else if (app.$auth.user.scope.indexOf('paciente') >= 0) {
+      data.nombres = app.$auth.user.nombres;
+      data.apellidos = app.$auth.user.apellidos;
+      data.numId = app.$auth.user.numId;
+      data.tipoId = app.$auth.user.tipoId;
+      data.idPaciente = app.$auth.user.idPaciente;
+      data.esPaciente = true;
+      const { medicos } = await app.$axios.$get('medicos');
+      data.medicos = medicos;
+    } else data.esPaciente = false;
+    return data;
+  },
+  data() {
     return defaultData();
   },
-  data: () => defaultData(),
   methods: {
     formatearHora(hora) {
       return moment(hora, 'HH:mm:ss').format('HH:mm');

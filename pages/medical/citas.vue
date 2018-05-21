@@ -3,49 +3,30 @@
     <div class="container-fluid">
       <card>
         <h4 slot="header" class="card-title">Citas</h4>
-          <div class="col-sm-4">
-            <div class="input-group mb-2">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fa fa-id-card"></i>
-                </span>
-              </div>
-              <input v-model="usuario" type="text" class="form-control" placeholder="Usuario">
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="input-group mb-2">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fa fa-id-card"></i>
-                </span>
-              </div>
-              <input v-model="nombresApellidos" type="text" class="form-control" placeholder="Nombres o Apellidos">
-            </div>
-            <br>
-            <button class="btn btn-primary mr-2" @click.prevent="buscar">Buscar médico</button>
-          </div>
-
-          <br>
           <div class="table-responsive">
             <table class="table table-hover table-striped">
               <thead>
                 <tr>
-                  <th>Usuario</th>
-                  <th>Nombre</th>
-                  <th>Especialidad</th>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Medico</th>
+                  <th>Comentario</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody id="myTable">
-                <tr v-for="medico in medicos" :key="medico.idMedico">
-                    <td>{{ medico.usuario }}</td>
-                    <td>{{ `${medico.nombres} ${medico.apellidos}`}}</td>
-                    <td>{{ medico.especialidad }}</td>
+                <tr v-for="cita in citas" :key="cita.idCita">
+                    <td>{{ formatearFecha(cita.fecha) }}</td>
+                    <td>{{ formatearHora(cita.hora) }}</td>
+                    <td>{{ `${cita.medico.nombres} ${cita.medico.apellidos}` }}</td>
+                    <td>{{ cita.comentario }}</td>
                     <td>
-                      <b-btn title="Ver" variant="secundary" size="sm" class="btn-simple" type="button" @click="verMedico(medico.idMedico)"><i class="fa fa-eye"></i></b-btn>
-                      <b-btn title="Editar" variant="primary" size="sm" class="btn-simple" type="button" @click="editarMedico(medico.idMedico)"><i class="fa fa-edit"></i></b-btn>
-                      <b-btn title="Deshabilitar" variant="danger" size="sm" class="btn-simple" type="button" @click="deshabilitarMedico(medico.idMedico)"><i class="fa fa-trash"></i></b-btn>
+                      <b-btn v-if="esAdmin" title="Editar" variant="primary" size="sm" class="btn-simple" type="button" @click="editarCita(cita.idCita)">
+                        <i class="fa fa-edit"></i>
+                        </b-btn>
+                      <b-btn title="Cancelar" variant="danger" size="sm" class="btn-simple" type="button" @click="cancelarCita(cita.idCita)" :disabled="cita.estado !== 'reservada'">
+                        <i class="fa fa-times"></i>
+                      </b-btn>
                     </td>
                 </tr>
               </tbody>
@@ -58,6 +39,7 @@
 
 <script>
 import Card from '~/components/Cards/Card.vue';
+import moment from 'moment';
 
 export default {
   head: {
@@ -65,18 +47,33 @@ export default {
   },
   components: { Card },
   async asyncData({ app }) {
-    const { medicos } = await app.$axios.$get('medicos/');
-    return { medicos };
+    const { citas } = await app.$axios.$get('citas/');
+    return { citas };
   },
-  data: () => ({
-    usuario: '',
-    nombresApellidos: '',
-  }),
+  data() {
+    return {
+      esAdmin: this.$auth.user.scope.indexOf('admin') >= 0,
+    };
+  },
   methods: {
-    editarMedico(idMedico) {
-      this.$router.replace({ path: `/medical/registrar-medico/${idMedico}` });
+    async cancelarCita(idCita) {
+      await this.$axios.$delete(`citas/${idCita}`);
+      this.$notify({
+        message: 'Cita cancelada',
+        icon: 'fa fa-check',
+        horizontalAlign: 'right',
+        verticalAlign: 'top',
+        type: 'success',
+      });
+      const { citas } = await this.$axios.$get('citas/');
+      this.citas = citas;
     },
-
+    formatearFecha(fecha) {
+      return moment(fecha).format('DD-MM-YYYY');
+    },
+    formatearHora(hora) {
+      return moment(hora, 'HH:mm:ss').format('HH:MM');
+    },
   },
 };
 </script>
