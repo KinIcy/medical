@@ -44,8 +44,16 @@
                                     toggle-class="btn-fill btn-block text-left"
                                     :text="textoCita(cita)"
                                     class="d-block"
+                                    menu-class="menu-cita"
                                     no-caret>
-                          <b-dropdown-item v-if="cita.estado !== 'disponible'">Ver</b-dropdown-item>
+                          <b-dropdown-header v-if="cita.estado === 'disponible'">Disponible</b-dropdown-header>
+                          <template v-else>
+                            <b-dropdown-header>{{cita.paciente.nombres}} {{cita.paciente.apellidos}}</b-dropdown-header>
+                            <p class="text-muted px-3 py-2">
+                              <span class="d-block">{{cita.comentario || 'Sin comentario'}}</span>
+                            </p>
+                          </template>
+                          <b-dropdown-divider></b-dropdown-divider>
                           <b-dropdown-item v-if="cita.estado === 'disponible'" @click="reservarCita(cita)">Reservar</b-dropdown-item>
                           <b-dropdown-item v-if="cita.estado === 'reservada'" @click="atenderCita(cita)">Atender</b-dropdown-item>
                           <b-dropdown-item v-if="cita.estado === 'reservada'" @click="marcarCitaNoAsistida(cita)">Marcar como no asistida</b-dropdown-item>
