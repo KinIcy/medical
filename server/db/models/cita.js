@@ -39,7 +39,7 @@ export default function (db) {
       await Promise.all(horarios.map(async (horario) => {
         const timer = moment(horario.horaInicio, ['HH:mm:ss']);
         const horas = [];
-        const fecha = moment().day(horario.dia).toDate();
+        const fecha = moment().day(horario.dia).add(1, 'week').toDate();
         const fin = moment(horario.horaFin, ['HH:mm:ss']);
         while (timer.isBefore(fin)) {
           horas.push(timer.format('HH:mm'));

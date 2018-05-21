@@ -19,9 +19,9 @@
                   <td>{{ `${medico.nombres} ${medico.apellidos}`}}</td>
                   <td>{{ medico.especialidad }}</td>
                   <td>
-                    <b-btn title="Ver" variant="secundary" size="sm" class="btn-simple" type="button" @click="verMedico(medico.idMedico)"><i class="fa fa-eye"></i></b-btn>
-                    <b-btn title="Editar" variant="primary" size="sm" class="btn-simple" type="button" @click="editarMedico(medico.idMedico)"><i class="fa fa-edit"></i></b-btn>
-                    <b-btn title="Deshabilitar" variant="danger" size="sm" class="btn-simple" type="button" @click="deshabilitarMedico(medico.idMedico)"><i class="fa fa-trash"></i></b-btn>
+                    <b-btn v-if="false" title="Ver" variant="secundary" size="sm" class="btn-simple" type="button" @click="verMedico(medico.idMedico)"><i class="fa fa-eye"></i></b-btn>
+                    <b-btn v-if="false" title="Editar" variant="primary" size="sm" class="btn-simple" type="button" @click="editarMedico(medico.idMedico)"><i class="fa fa-edit"></i></b-btn>
+                    <b-btn v-if="false" title="Deshabilitar" variant="danger" size="sm" class="btn-simple" type="button" @click="deshabilitarMedico(medico.idMedico)"><i class="fa fa-trash"></i></b-btn>
                   </td>
               </tr>
             </tbody>

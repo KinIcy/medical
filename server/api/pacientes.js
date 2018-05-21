@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import crypto from 'crypto';
+// import crypto from 'crypto';
 
 import { models } from '../db';
 
@@ -20,6 +20,7 @@ router.post('/', aeh(async (req, res) => {
   })) {
     res.status(400).send({ error: 'Ya existe un paciente registrado con mismo documento de identiidad' });
   } else {
+    // const contrasena = crypto.randomBytes(20).toString('hex');
     await models.Paciente.create({
       tipoId: req.body.tipoId,
       numId: req.body.numId,
@@ -29,7 +30,7 @@ router.post('/', aeh(async (req, res) => {
       telefono: req.body.telefono,
       correo: req.body.correo,
       ciudad: req.body.ciudad,
-      contrasena: crypto.randomBytes(20).toString('hex'),
+      contrasena: req.body.numId,
     });
     res.status(201).send({ status: 'OK' });
   }
