@@ -57,7 +57,7 @@
                           <b-dropdown-item v-if="cita.estado === 'disponible'" @click="reservarCita(cita)">Reservar</b-dropdown-item>
                           <b-dropdown-item v-if="cita.estado === 'reservada'" @click="atenderCita(cita)">Atender</b-dropdown-item>
                           <b-dropdown-item v-if="cita.estado === 'reservada'" @click="marcarCitaNoAsistida(cita)">Marcar como no asistida</b-dropdown-item>
-                          <b-dropdown-item v-if="cita.estado === 'reservada'" @click="reprogramarCita(cita)">Reprogramar</b-dropdown-item>
+                          <b-dropdown-item v-if="cita.estado === 'reservada' && false" @click="reprogramarCita(cita)">Reprogramar</b-dropdown-item>
                           <b-dropdown-item v-if="esCancelable(cita)" @click="cancelarCita(cita)">Cancelar</b-dropdown-item>
                         </b-dropdown>
                       </template>

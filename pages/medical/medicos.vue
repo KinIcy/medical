@@ -49,9 +49,6 @@ export default {
     nombresApellidos: '',
   }),
   methods: {
-    buscar() {
-      alert('Para JSON');
-    },
     editarMedico(idMedico) {
       this.$router.replace({ path: `/medical/registrar-medico/${idMedico}` });
     },

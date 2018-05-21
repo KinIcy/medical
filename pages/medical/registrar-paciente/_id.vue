@@ -2,7 +2,7 @@
   <div class="content">
     <div class="container-fluid">
       <card class="registrar-paciente-card">
-        <h4 slot="header" class="card-title">{{modoEdicion ? 'Actualizar' : 'Registrar'}} Paciente</h4>
+        <h3 slot="header" class="title text-center">{{modoEdicion ? 'Actualizar' : 'Registrar'}} Paciente</h3>
         <form @submit.prevent="OnSubmit">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
