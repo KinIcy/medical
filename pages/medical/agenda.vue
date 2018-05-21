@@ -220,7 +220,7 @@ export default {
       });
     },
     esCancelable(cita) {
-      return cita.estado !== 'atendida' && cita.estado !== 'cancelada';
+      return ['atendida', 'cancelada', 'no asistida'].indexOf(cita.estado) < 0;
     },
     atenderCita(cita) {
       this.$router.replace({ path: '/medical/atender-cita', query: { idCita: cita.idCita } });
@@ -232,6 +232,17 @@ export default {
       await this.$axios.$delete(`citas/${cita.idCita}`);
       this.$notify({
         message: 'Cita cancelada',
+        icon: 'fa fa-check',
+        horizontalAlign: 'right',
+        verticalAlign: 'top',
+        type: 'success',
+      });
+      this.actualizarAgenda();
+    },
+    async marcarCitaNoAsistida(cita) {
+      await this.$axios.$put(`citas/${cita.idCita}`, { noAsistida: true });
+      this.$notify({
+        message: 'Cita marcada como no asistida',
         icon: 'fa fa-check',
         horizontalAlign: 'right',
         verticalAlign: 'top',
